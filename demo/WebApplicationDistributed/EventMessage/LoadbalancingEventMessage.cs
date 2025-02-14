@@ -1,0 +1,14 @@
+﻿using EasyCore.EventBus.Event;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WebApplicationDistributed.EventMessage
+{
+    public class LoadbalancingEventMessage : IEvent
+    {
+        public string Message { get; set; }
+    }
+}

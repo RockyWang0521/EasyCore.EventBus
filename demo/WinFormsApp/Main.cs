@@ -1,6 +1,7 @@
 using EasyCore.EventBus.Distributed;
 using EasyCore.EventBus.Local;
 using WinFormsApp.EventMessage;
+using WinFormsAppDistributed.EventMessage;
 
 namespace WinFormsApp
 {
@@ -42,6 +43,15 @@ namespace WinFormsApp
             var eventMessage = new WebDistributedEventMessage()
             {
                 Message = "this is WebDistributedEventMessage "
+            };
+            _distributedEventBus.PublishAsync(eventMessage);
+        }
+
+        private void btn_Distributed_Loadbalancing_Click(object sender, EventArgs e)
+        {
+            var eventMessage = new LoadbalancingEventMessage()
+            {
+                Message = "this is LoadbalancingEventMessage "
             };
             _distributedEventBus.PublishAsync(eventMessage);
         }

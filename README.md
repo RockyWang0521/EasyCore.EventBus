@@ -20,7 +20,7 @@ EventBus 可以根据其实现的不同，分为几种不同的类型：
 基于消息队列的 EventBus：通过消息队列（如 RabbitMQ、Kafka、Redis 等）将事件传递到其他系统或服务中。适用于微服务架构和分布式系统。
 这种基于消息队列的 EventBus 能够支持跨进程、跨机器甚至跨网络的事件传递，通常具有较高的可扩展性和容错性。
 
-此项目实现了winfrom之间的EventBus，以及winform与web之间的EventBus。基于RabbitMQ作为消息传递的媒介。
+此项目实现了winfrom之间的EventBus，winform与web之间的EventBus，web和web之间的EventBus。基于RabbitMQ作为消息传递的媒介。解决了winfrom只能用中间表或者api进行消息传递的单一性。
 
 
 #### 使用说明
@@ -132,6 +132,11 @@ web注册
 
 
 2.  分布式EventBus
+docker启动一个RabbitMQ
+
+```
+docker run -d  --name rabbitmq -e RABBITMQ_DEFAULT_USER=123 -e RABBITMQ_DEFAULT_PASS=123 -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+```
 
 继承事件基础类
 ```

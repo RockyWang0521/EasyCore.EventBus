@@ -132,6 +132,11 @@ web注册
 
 
 2.  分布式EventBus
+docker启动一个RabbitMQ
+
+```
+docker run -d  --name rabbitmq -e RABBITMQ_DEFAULT_USER=123 -e RABBITMQ_DEFAULT_PASS=123 -p 15672:15672 -p 5672:5672 rabbitmq:3-management
+```
 
 继承事件基础类
 ```

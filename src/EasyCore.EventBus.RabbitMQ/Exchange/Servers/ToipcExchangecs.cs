@@ -14,6 +14,7 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
     {
         private IModel? _channel;
         private IConnection? _connection;
+        private List<Type> _routingKeyTypes = new List<Type>();
         private readonly IConnectionChannel _connectionChannel;
         private readonly RabbitMQOptions _rabbitMQOptions;
         private readonly IServiceProvider _serviceProvider;
@@ -68,8 +69,6 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
             List<string> routingKeys = new List<string>();
 
-            List<Type> routingKeyTypes = new List<Type>();
-
             foreach (var dll in dllFiles)
             {
                 Assembly assembly = Assembly.LoadFrom(dll);
@@ -90,7 +89,7 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                     {
                         var routingKey = eventTypeArgument.Name;
 
-                        routingKeyTypes.Add(eventTypeArgument);
+                        _routingKeyTypes.Add(eventTypeArgument);
 
                         routingKeys.Add(routingKey);
                     }
@@ -114,13 +113,9 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                     Type? eventType = null;
 
-                    if (routingKeyTypes == null || routingKeyTypes.Count == 0)
+                    if (_routingKeyTypes != null || _routingKeyTypes?.Count > 0)
                     {
-                        eventType = GetRoutingKeys().FirstOrDefault(t => t.Name == e.RoutingKey);
-                    }
-                    else
-                    {
-                        eventType = routingKeyTypes.FirstOrDefault(t => t.Name == e.RoutingKey);
+                        eventType = _routingKeyTypes.FirstOrDefault(t => t.Name == e.RoutingKey);
                     }
 
                     if (eventType != null)
@@ -183,7 +178,7 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 props.Headers = new Dictionary<string, object>
                 {
-                    { "EventType",typeof(TEvent).AssemblyQualifiedName}
+                    { "EventType",typeof(TEvent).Name }
                 };
 
                 channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
@@ -216,7 +211,7 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 props.Headers = new Dictionary<string, object>
                 {
-                    { "MessageName", nameof(TEvent) }
+                   { "EventType",typeof(TEvent).Name }
                 };
 
                 channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
@@ -230,52 +225,6 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                 return false;
                 throw;
             }
-        }
-
-        private List<Type> GetRoutingKeys()
-        {
-            string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll");
-
-            var eventType = typeof(IEvent);
-
-            var handlerType = typeof(IDistributedEventHandler<>);
-
-            List<Type> routingKeyTypes = new List<Type>();
-
-            foreach (var dll in dllFiles)
-            {
-                try
-                {
-                    Assembly assembly = Assembly.LoadFrom(dll);
-
-                    var handlers = assembly.GetTypes()
-                        .Where(type => type.IsClass && !type.IsAbstract)
-                        .Where(type => type.GetInterfaces()
-                            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType));
-
-                    foreach (var handler in handlers)
-                    {
-                        var eventInterface = handler.GetInterfaces()
-                            .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType);
-
-                        var eventTypeArgument = eventInterface.GetGenericArguments()[0];
-
-                        if (eventType.IsAssignableFrom(eventTypeArgument))
-                        {
-                            var routingKey = eventTypeArgument.Name;
-
-                            routingKeyTypes.Add(eventTypeArgument);
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-
-            return routingKeyTypes;
         }
 
         public void Dispose()

@@ -33,7 +33,7 @@ namespace WinFormsApp
             {
                 services.AddSingleton<Main>();
 
-                services.AddAppEventBus(options =>
+                services.EasyCoreEventBus(options =>
                 {
                     options.RabbitMQ(opt =>
                     {

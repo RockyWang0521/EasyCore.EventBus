@@ -17,7 +17,7 @@ namespace EasyCore.EventBus
 {
     public static class AddEventbus
     {
-        public static void AddAppEventBus(this IServiceCollection service, Action<EventBusOptions>? action = null)
+        public static void EasyCoreEventBus(this IServiceCollection service, Action<EventBusOptions>? action = null)
         {
             service.AddSingleton<ILocalEventBus, LocalEventBus>();
 

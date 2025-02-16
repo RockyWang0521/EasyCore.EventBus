@@ -7,7 +7,7 @@ namespace EasyCore.EventBus.Distributed
     {
         private readonly IEventRabbitMQClient _eventRabbitMQClient;
 
-        public DistributedEventBus(IOptions<EventBusOptions> eventBusOptions, IEventRabbitMQClient eventRabbitMQClient)
+        public DistributedEventBus(IEventRabbitMQClient eventRabbitMQClient)
         {
             _eventRabbitMQClient = eventRabbitMQClient;
         }

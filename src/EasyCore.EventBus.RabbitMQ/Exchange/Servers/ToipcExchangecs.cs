@@ -185,6 +185,10 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
+                channel?.Close();
+
+                channel?.Dispose();
+
                 return Task.FromResult(true);
             }
             catch (Exception)
@@ -217,6 +221,10 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                 channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
 
                 if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
+
+                channel?.Close();
+
+                channel?.Dispose();
 
                 return true;
             }

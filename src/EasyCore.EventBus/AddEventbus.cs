@@ -21,10 +21,10 @@ namespace EasyCore.EventBus
         {
             service.AddSingleton<ILocalEventBus, LocalEventBus>();
 
-            service.AddSingleton<IDistributedEventBus, DistributedEventBus>();
-
             if (action != null)
             {
+                service.AddSingleton<IDistributedEventBus, DistributedEventBus>();
+
                 service.AddOptions();
 
                 var options = new EventBusOptions();

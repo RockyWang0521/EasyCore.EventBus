@@ -185,16 +185,16 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
-                channel?.Close();
-
-                channel?.Dispose();
-
                 return Task.FromResult(true);
             }
             catch (Exception)
             {
-                return Task.FromResult(false);
                 throw;
+            }
+            finally
+            {
+                channel?.Close();
+                channel?.Dispose();
             }
         }
 
@@ -222,16 +222,16 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
-                channel?.Close();
-
-                channel?.Dispose();
-
                 return true;
             }
             catch (Exception)
             {
-                return false;
                 throw;
+            }
+            finally
+            {
+                channel?.Close();
+                channel?.Dispose();
             }
         }
 

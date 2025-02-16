@@ -163,16 +163,18 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
         private Task<bool> SendAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent
         {
-            IModel? channel = null;
             try
             {
                 var routingKey = typeof(TEvent).Name;
 
-                channel = _connection!.CreateModel();
+                if (_channel == null || _channel.IsClosed)
+                {
+                    Connect();
+                }
 
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(eventMessage));
 
-                var props = channel.CreateBasicProperties();
+                var props = _channel!.CreateBasicProperties();
 
                 props.DeliveryMode = 2;
 
@@ -181,9 +183,9 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                     { "EventType",typeof(TEvent).Name }
                 };
 
-                channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
+                _channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
 
-                if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
+                if (_channel.NextPublishSeqNo > 0) _channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
                 return Task.FromResult(true);
             }
@@ -191,47 +193,39 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             {
                 throw;
             }
-            finally
-            {
-                channel?.Close();
-                channel?.Dispose();
-            }
         }
 
         private bool Send<TEvent>(TEvent eventMessage) where TEvent : IEvent
         {
-            IModel? channel = null;
             try
             {
                 var routingKey = typeof(TEvent).Name;
 
-                channel = _connection!.CreateModel();
+                if (_channel == null || _channel.IsClosed)
+                {
+                    Connect();
+                }
 
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(eventMessage));
 
-                var props = channel.CreateBasicProperties();
+                var props = _channel!.CreateBasicProperties();
 
                 props.DeliveryMode = 2;
 
                 props.Headers = new Dictionary<string, object>
                 {
-                   { "EventType",typeof(TEvent).Name }
+                    { "EventType",typeof(TEvent).Name }
                 };
 
-                channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
+                _channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
 
-                if (channel.NextPublishSeqNo > 0) channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
+                if (_channel.NextPublishSeqNo > 0) _channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
                 return true;
             }
             catch (Exception)
             {
                 throw;
-            }
-            finally
-            {
-                channel?.Close();
-                channel?.Dispose();
             }
         }
 

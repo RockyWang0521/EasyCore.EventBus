@@ -5,13 +5,10 @@ namespace EasyCore.EventBus.Distributed
 {
     public class DistributedEventBus : IDistributedEventBus
     {
-        private readonly EventBusOptions _eventBusOptions;
-
         private readonly IEventRabbitMQClient _eventRabbitMQClient;
 
         public DistributedEventBus(IOptions<EventBusOptions> eventBusOptions, IEventRabbitMQClient eventRabbitMQClient)
         {
-            _eventBusOptions = eventBusOptions.Value;
             _eventRabbitMQClient = eventRabbitMQClient;
         }
 

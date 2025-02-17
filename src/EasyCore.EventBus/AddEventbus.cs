@@ -1,17 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using EasyCore.EventBus.Local;
-using EasyCore.EventBus.Distributed;
+﻿using EasyCore.EventBus.Distributed;
 using EasyCore.EventBus.Event;
-using Microsoft.Extensions.Options;
 using EasyCore.EventBus.HostedService;
+using EasyCore.EventBus.Local;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace EasyCore.EventBus
 {

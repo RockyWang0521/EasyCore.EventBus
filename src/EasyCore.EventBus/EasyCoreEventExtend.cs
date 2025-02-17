@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace EasyCore.EventBus
 {
-    public static class AddEventbus
+    public static class EasyCoreEventExtend
     {
         public static void EasyCoreEventBus(this IServiceCollection service, Action<EventBusOptions>? action = null)
         {

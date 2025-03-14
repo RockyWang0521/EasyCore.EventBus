@@ -1,5 +1,6 @@
 ﻿using EasyCore.EventBus.Event;
 using EasyCore.EventBus.RabbitMQ.Exchange.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -122,17 +123,21 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                     {
                         var eventMessageJson = Encoding.UTF8.GetString(e.Body.ToArray());
                         var eventMessage = JsonConvert.DeserializeObject(eventMessageJson, eventType);
-                        var handler = _serviceProvider.GetService(typeof(IDistributedEventHandler<>).MakeGenericType(eventType));
 
-                        if (handler != null)
+                        using (var scope = _serviceProvider.CreateScope())
                         {
+                            var handler = scope.ServiceProvider.GetService(typeof(IDistributedEventHandler<>).MakeGenericType(eventType));
+                            if (handler != null)
+                            {
+
 #pragma warning disable CS8600
 #pragma warning disable CS8602
-                            await (Task)handler.GetType().GetMethod("HandleAsync").Invoke(handler, new object[] { eventMessage! });
+                                await (Task)handler.GetType().GetMethod("HandleAsync").Invoke(handler, new object[] { eventMessage! });
 #pragma warning restore CS8602
 #pragma warning restore CS8600
 
-                            _channel!.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+                                _channel!.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+                            }
                         }
                     }
                     else

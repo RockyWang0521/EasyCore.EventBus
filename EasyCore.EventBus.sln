@@ -5,17 +5,17 @@ VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A0F801E1-35F9-49BC-8B7A-E86D9854890B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyCore.EventBus", "src\EasyCore.EventBus\EasyCore.EventBus.csproj", "{42DEE45B-9B04-4FEA-9650-4D2894FA8DE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyCore.EventBus", "src\EasyCore.EventBus\EasyCore.EventBus.csproj", "{42DEE45B-9B04-4FEA-9650-4D2894FA8DE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyCore.EventBus.RabbitMQ", "src\EasyCore.EventBus.RabbitMQ\EasyCore.EventBus.RabbitMQ.csproj", "{51DEEE6F-2B4E-483B-80E5-54BA0837D0BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyCore.EventBus.RabbitMQ", "src\EasyCore.EventBus.RabbitMQ\EasyCore.EventBus.RabbitMQ.csproj", "{51DEEE6F-2B4E-483B-80E5-54BA0837D0BF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{F9E3CBB2-26A2-4B0D-BA80-4B7EAB03A385}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp", "demo\WinFormsApp\WinFormsApp.csproj", "{4E8D7A07-7878-4989-8183-8CF908CD3852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp", "demo\WinFormsApp\WinFormsApp.csproj", "{4E8D7A07-7878-4989-8183-8CF908CD3852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsAppDistributed", "demo\WinFormsAppDistributed\WinFormsAppDistributed.csproj", "{3423D47B-E628-4F17-BD8F-0032E85C3618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsAppDistributed", "demo\WinFormsAppDistributed\WinFormsAppDistributed.csproj", "{3423D47B-E628-4F17-BD8F-0032E85C3618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationDistributed", "demo\WebApplicationDistributed\WebApplicationDistributed.csproj", "{5CC2EC64-5C49-4F9A-BFB8-A86426469573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplicationDistributed", "demo\WebApplicationDistributed\WebApplicationDistributed.csproj", "{5CC2EC64-5C49-4F9A-BFB8-A86426469573}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

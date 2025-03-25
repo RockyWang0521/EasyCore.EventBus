@@ -20,7 +20,8 @@ namespace EasyCore.EventBus.RabbitMQ
 
         public IConnection GetConnection()
         {
-            if (_connection != null && _connection.IsOpen) return _connection;
+            _connection?.Close();
+            _connection?.Dispose();
             _connection = CreateConnection();
             return _connection;
         }
@@ -33,7 +34,16 @@ namespace EasyCore.EventBus.RabbitMQ
                 UserName = _options.UserName,
                 Password = _options.Password,
                 Port = _options.Port,
-                VirtualHost = _options.VirtualHost
+                VirtualHost = _options.VirtualHost,
+                AutomaticRecoveryEnabled = true,
+                DispatchConsumersAsync = true,
+                TopologyRecoveryEnabled = true,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+                RequestedHeartbeat = TimeSpan.FromSeconds(30),
+                RequestedConnectionTimeout = TimeSpan.FromSeconds(30),
+                ContinuationTimeout = TimeSpan.FromSeconds(30),
+                SocketReadTimeout = TimeSpan.FromSeconds(30),
+                SocketWriteTimeout = TimeSpan.FromSeconds(30)
             };
             return _connection = factory.CreateConnection();
         }

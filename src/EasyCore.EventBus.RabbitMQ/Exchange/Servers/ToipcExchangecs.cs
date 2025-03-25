@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Data.Common;
 using System.Reflection;
 using System.Text;
 using System.Threading.Channels;
@@ -16,6 +17,8 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
         private IModel? _channel;
         private IConnection? _connection;
         private List<Type> _routingKeyTypes = new List<Type>();
+        private static readonly object Lock = new();
+        private AsyncEventingBasicConsumer? _consumer;
         private readonly IConnectionChannel _connectionChannel;
         private readonly RabbitMQOptions _rabbitMQOptions;
         private readonly IServiceProvider _serviceProvider;
@@ -32,33 +35,54 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
         public void Connect()
         {
-            if (_channel == null || _channel.IsClosed)
+            try
             {
-                _channel = _connection!.CreateModel();
-
-                _channel.ExchangeDeclare(_rabbitMQOptions.ExchangeName, _rabbitMQOptions.ExchangeType, true);
-
-                var arguments = new Dictionary<string, object>
+                lock (Lock)
                 {
-                    { "x-message-ttl", _rabbitMQOptions.MessageTTL }
-                };
+                    if (_channel == null || _channel.IsClosed)
+                    {
+                        _connection = _connectionChannel.GetConnection();
 
-                if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueMode))
-                    arguments.Add("x-queue-mode", _rabbitMQOptions.QueueMode);
+                        _channel?.Close();
 
-                if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueType))
-                    arguments.Add("x-queue-type", _rabbitMQOptions.QueueType);
+                        _channel?.Dispose();
 
-                try
-                {
-                    _channel.QueueDeclare(_rabbitMQOptions.QueueName, _rabbitMQOptions.Durable, _rabbitMQOptions.Exclusive, _rabbitMQOptions.AutoDelete, arguments);
-                }
-                catch (Exception)
-                {
-                    throw;
+                        _channel = _connection.CreateModel();
+
+                        _channel.ModelShutdown += async (sender, e) =>
+                        {
+                            _consumer!.Received -= Received;
+
+                            Connect();
+
+                            Subscribe();
+
+                            await Task.CompletedTask;
+                        };
+
+                        _channel.ExchangeDeclare(_rabbitMQOptions.ExchangeName, _rabbitMQOptions.ExchangeType, true);
+
+                        var arguments = new Dictionary<string, object> { { "x-message-ttl", _rabbitMQOptions.MessageTTL } };
+
+                        if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueMode))
+                            arguments.Add("x-queue-mode", _rabbitMQOptions.QueueMode);
+
+                        if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueType))
+                            arguments.Add("x-queue-type", _rabbitMQOptions.QueueType);
+
+
+                        _channel.QueueDeclare(_rabbitMQOptions.QueueName, _rabbitMQOptions.Durable, _rabbitMQOptions.Exclusive, _rabbitMQOptions.AutoDelete, arguments);
+                    }
                 }
             }
+            catch (Exception)
+            {
+                Connect();
+
+                throw;
+            }
         }
+
 
         public void Subscribe()
         {
@@ -102,58 +126,61 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                 _channel.QueueBind(_rabbitMQOptions.QueueName, _rabbitMQOptions.ExchangeName, routingKey);
             }
 
-            var consumer = new EventingBasicConsumer(_channel);
+            _consumer = new AsyncEventingBasicConsumer(_channel);
 
-            consumer.Received += async (sender, e) =>
+            _channel.BasicConsume(queue: _rabbitMQOptions.QueueName, autoAck: false, consumer: _consumer);
+
+            _consumer.Received += Received;
+        }
+
+        private async Task Received(object sender, BasicDeliverEventArgs e)
+        {
+            try
             {
-                try
+                var messageId = e.BasicProperties?.CorrelationId;
+
+                string routingKey = e.RoutingKey;
+
+                Type? eventType = null;
+
+                if (_routingKeyTypes != null && _routingKeyTypes?.Count > 0)
                 {
-                    var messageId = e.BasicProperties?.CorrelationId;
+                    eventType = _routingKeyTypes.FirstOrDefault(t => t.Name == e.RoutingKey);
+                }
 
-                    string routingKey = e.RoutingKey;
+                if (eventType != null)
+                {
+                    var eventMessageJson = Encoding.UTF8.GetString(e.Body.ToArray());
+                    var eventMessage = JsonConvert.DeserializeObject(eventMessageJson, eventType);
 
-                    Type? eventType = null;
-
-                    if (_routingKeyTypes != null || _routingKeyTypes?.Count > 0)
+                    using (var scope = _serviceProvider.CreateScope())
                     {
-                        eventType = _routingKeyTypes.FirstOrDefault(t => t.Name == e.RoutingKey);
-                    }
+                        var handler = scope.ServiceProvider.GetService(typeof(IDistributedEventHandler<>).MakeGenericType(eventType));
 
-                    if (eventType != null)
-                    {
-                        var eventMessageJson = Encoding.UTF8.GetString(e.Body.ToArray());
-                        var eventMessage = JsonConvert.DeserializeObject(eventMessageJson, eventType);
-
-                        using (var scope = _serviceProvider.CreateScope())
+                        if (handler != null)
                         {
-                            var handler = scope.ServiceProvider.GetService(typeof(IDistributedEventHandler<>).MakeGenericType(eventType));
-                            if (handler != null)
-                            {
-
 #pragma warning disable CS8600
 #pragma warning disable CS8602
-                                await (Task)handler.GetType().GetMethod("HandleAsync").Invoke(handler, new object[] { eventMessage! });
+                            await (Task)handler.GetType().GetMethod("HandleAsync").Invoke(handler, new object[] { eventMessage! });
 #pragma warning restore CS8602
 #pragma warning restore CS8600
 
-                                _channel!.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
-                            }
+                            _channel!.BasicAck(e.DeliveryTag, false);
                         }
                     }
-                    else
-                    {
-                        _channel!.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: true);
-                    }
-                    await Task.CompletedTask;
                 }
-                catch (Exception)
+                else
                 {
                     _channel!.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: true);
-                    throw;
                 }
-            };
+                await Task.CompletedTask;
+            }
+            catch (Exception)
+            {
+                _channel!.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: true);
 
-            _channel.BasicConsume(queue: _rabbitMQOptions.QueueName, autoAck: false, consumer: consumer);
+                throw;
+            }
         }
 
         public async Task<bool> PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent
@@ -171,11 +198,6 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             try
             {
                 var routingKey = typeof(TEvent).Name;
-
-                if (_channel == null || _channel.IsClosed)
-                {
-                    Connect();
-                }
 
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(eventMessage));
 
@@ -196,6 +218,8 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             }
             catch (Exception)
             {
+                Connect();
+
                 throw;
             }
         }
@@ -205,11 +229,6 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             try
             {
                 var routingKey = typeof(TEvent).Name;
-
-                if (_channel == null || _channel.IsClosed)
-                {
-                    Connect();
-                }
 
                 var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(eventMessage));
 
@@ -230,6 +249,8 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             }
             catch (Exception)
             {
+                Connect();
+
                 throw;
             }
         }

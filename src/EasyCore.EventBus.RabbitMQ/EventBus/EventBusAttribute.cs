@@ -3,9 +3,11 @@
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
     public class EventBusAttribute : Attribute
     {
+        public string QueueName { get; }
 
-        public EventBusAttribute(string topicName)
+        public EventBusAttribute(string queueName)
         {
+            QueueName = queueName;
         }
     }
 }

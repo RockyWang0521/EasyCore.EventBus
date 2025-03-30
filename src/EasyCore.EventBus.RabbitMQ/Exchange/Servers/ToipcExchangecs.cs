@@ -128,6 +128,8 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
             _consumer = new AsyncEventingBasicConsumer(_channel);
 
+            _channel!.BasicQos(0, 1, false);
+
             _channel.BasicConsume(queue: _rabbitMQOptions.QueueName, autoAck: false, consumer: _consumer);
 
             _consumer.Received += Received;

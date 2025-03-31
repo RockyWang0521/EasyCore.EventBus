@@ -5,7 +5,7 @@
         /// <summary>
         /// RabbitMQ主机名
         /// </summary>
-        public string HostName { get; set; }
+        public string HostName { get; set; } 
 
         /// <summary>
         /// RabbitMQ用户名

@@ -30,7 +30,6 @@ namespace EasyCore.EventBus.RabbitMQ
         {
             var factory = new ConnectionFactory()
             {
-                HostName = _options.HostName,
                 UserName = _options.UserName,
                 Password = _options.Password,
                 Port = _options.Port,
@@ -45,6 +44,11 @@ namespace EasyCore.EventBus.RabbitMQ
                 SocketReadTimeout = TimeSpan.FromSeconds(30),
                 SocketWriteTimeout = TimeSpan.FromSeconds(30)
             };
+
+            if (_options.HostName.Contains(",")) return _connection = factory.CreateConnection(AmqpTcpEndpoint.ParseMultiple(_options.HostName));
+
+            factory.HostName = _options.HostName;
+
             return _connection = factory.CreateConnection();
         }
 

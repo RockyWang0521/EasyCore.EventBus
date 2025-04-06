@@ -10,6 +10,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>gitee</RepositoryType>
     <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
+    <Description>.Net Core EventBus，Distributed Event Bus，Based on RabbitMQ。</Description>
+    <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
+    <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

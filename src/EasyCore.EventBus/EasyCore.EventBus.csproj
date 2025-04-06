@@ -10,6 +10,10 @@
     <IncludeSymbols>False</IncludeSymbols>
     <RepositoryType>gitee</RepositoryType>
     <Authors>WZHY</Authors>
+    <Description>.Net Core EventBus，Local event bus。</Description>
+    <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

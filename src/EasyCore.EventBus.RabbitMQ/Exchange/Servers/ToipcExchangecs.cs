@@ -5,10 +5,8 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Data.Common;
 using System.Reflection;
 using System.Text;
-using System.Threading.Channels;
 
 namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 {

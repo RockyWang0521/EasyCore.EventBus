@@ -1,5 +1,4 @@
 ﻿using EasyCore.EventBus.Event;
-using Microsoft.Extensions.Options;
 
 namespace EasyCore.EventBus.Distributed
 {

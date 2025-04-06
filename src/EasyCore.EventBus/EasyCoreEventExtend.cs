@@ -36,7 +36,11 @@ namespace EasyCore.EventBus
 
             string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll");
+            string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll", SearchOption.TopDirectoryOnly).Where(path =>
+            {
+                string fileName = Path.GetFileName(path);
+                return !(fileName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("System.", StringComparison.OrdinalIgnoreCase));
+            }).ToArray();
 
             var eventtype = typeof(IEvent);
 

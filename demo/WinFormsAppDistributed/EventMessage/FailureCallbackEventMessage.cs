@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinFormsAppDistributed.EventMessage
 {
-    public class LoadbalancingEventMessage : IEvent
+    public class FailureCallbackEventMessage : IEvent
     {
         public string Message { get; set; }
     }

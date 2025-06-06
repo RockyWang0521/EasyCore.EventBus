@@ -1,7 +1,6 @@
 using EasyCore.EventBus.Distributed;
 using EasyCore.EventBus.Local;
 using WinFormsApp.EventMessage;
-using WinFormsAppDistributed.EventMessage;
 
 namespace WinFormsApp
 {
@@ -47,11 +46,11 @@ namespace WinFormsApp
             _distributedEventBus.PublishAsync(eventMessage);
         }
 
-        private void btn_Distributed_Loadbalancing_Click(object sender, EventArgs e)
+        private void btn_FailureCallback_Click(object sender, EventArgs e)
         {
-            var eventMessage = new LoadbalancingEventMessage()
+            var eventMessage = new FailureCallbackEventMessage()
             {
-                Message = "this is LoadbalancingEventMessage "
+                Message = "this is FailureCallbackEventMessage "
             };
             _distributedEventBus.PublishAsync(eventMessage);
         }

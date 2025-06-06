@@ -31,7 +31,7 @@
             btn_Local = new Button();
             btn_Distributed = new Button();
             btn_Web = new Button();
-            btn_Distributed_Loadbalancing = new Button();
+            btn_FailureCallback = new Button();
             SuspendLayout();
             // 
             // btn_Local
@@ -46,7 +46,7 @@
             // 
             // btn_Distributed
             // 
-            btn_Distributed.Location = new Point(316, 192);
+            btn_Distributed.Location = new Point(316, 195);
             btn_Distributed.Name = "btn_Distributed";
             btn_Distributed.Size = new Size(171, 74);
             btn_Distributed.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // btn_Web
             // 
-            btn_Web.Location = new Point(316, 296);
+            btn_Web.Location = new Point(316, 302);
             btn_Web.Name = "btn_Web";
             btn_Web.Size = new Size(171, 74);
             btn_Web.TabIndex = 2;
@@ -64,22 +64,22 @@
             btn_Web.UseVisualStyleBackColor = true;
             btn_Web.Click += btn_Web_Click;
             // 
-            // btn_Distributed_Loadbalancing
+            // btn_FailureCallback
             // 
-            btn_Distributed_Loadbalancing.Location = new Point(316, 410);
-            btn_Distributed_Loadbalancing.Name = "btn_Distributed_Loadbalancing";
-            btn_Distributed_Loadbalancing.Size = new Size(171, 74);
-            btn_Distributed_Loadbalancing.TabIndex = 3;
-            btn_Distributed_Loadbalancing.Text = "分布式事件总线--负载均衡";
-            btn_Distributed_Loadbalancing.UseVisualStyleBackColor = true;
-            btn_Distributed_Loadbalancing.Click += btn_Distributed_Loadbalancing_Click;
+            btn_FailureCallback.Location = new Point(316, 409);
+            btn_FailureCallback.Name = "btn_FailureCallback";
+            btn_FailureCallback.Size = new Size(171, 74);
+            btn_FailureCallback.TabIndex = 3;
+            btn_FailureCallback.Text = "失败回调事件总线";
+            btn_FailureCallback.UseVisualStyleBackColor = true;
+            btn_FailureCallback.Click += btn_FailureCallback_Click;
             // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 575);
-            Controls.Add(btn_Distributed_Loadbalancing);
+            ClientSize = new Size(800, 549);
+            Controls.Add(btn_FailureCallback);
             Controls.Add(btn_Web);
             Controls.Add(btn_Distributed);
             Controls.Add(btn_Local);
@@ -93,6 +93,6 @@
         private Button btn_Local;
         private Button btn_Distributed;
         private Button btn_Web;
-        private Button btn_Distributed_Loadbalancing;
+        private Button btn_FailureCallback;
     }
 }

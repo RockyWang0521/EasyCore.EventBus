@@ -35,12 +35,12 @@
         /// <summary>
         /// 交换机名称
         /// </summary>
-        public string ExchangeName { get; set; } = "event_bus";
+        public string ExchangeName { get; set; } = "EasyCore.EventBus";
 
         /// <summary>
         /// 队列名称
         /// </summary>
-        public string QueueName { get; set; } = "event_bus_queue";
+        public string QueueName { get; set; } = "EasyCore.Queue";
 
         /// <summary>
         /// 获取或设置队列消息自动删除时间，默认10天（以毫秒为单位）

@@ -41,6 +41,12 @@ namespace WinFormsAppDistributed
                         opt.Password = "123";
                         opt.Port = 5672;
                     });
+
+                    options.FailureCallback = (key, mes) =>
+                    {
+                        MessageBox.Show(mes, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    };
+
                 });
             });
     }

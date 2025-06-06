@@ -13,6 +13,7 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
     public class ToipcExchangecs : IToipcExchangecs
     {
         private IModel? _channel;
+        private string? _appName;
         private IConnection? _connection;
         private List<Type> _routingKeyTypes = new List<Type>();
         private static readonly object Lock = new();
@@ -20,14 +21,18 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
         private readonly IConnectionChannel _connectionChannel;
         private readonly RabbitMQOptions _rabbitMQOptions;
         private readonly IServiceProvider _serviceProvider;
+        private readonly EventBusOptions _eventBusoptions;
 
-        public ToipcExchangecs(IConnectionChannel connectionChannel,
+        public ToipcExchangecs(
+            IConnectionChannel connectionChannel,
             IOptions<RabbitMQOptions> rabbitMQOptions,
+            IOptions<EventBusOptions> eventBusoptions,
             IServiceProvider serviceProvider)
         {
             _connectionChannel = connectionChannel;
             _connection = _connectionChannel!.GetConnection();
             _rabbitMQOptions = rabbitMQOptions.Value;
+            _eventBusoptions = eventBusoptions.Value;
             _serviceProvider = serviceProvider;
         }
 
@@ -60,16 +65,6 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                         _channel.ExchangeDeclare(_rabbitMQOptions.ExchangeName, _rabbitMQOptions.ExchangeType, true);
 
-                        var arguments = new Dictionary<string, object> { { "x-message-ttl", _rabbitMQOptions.MessageTTL } };
-
-                        if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueMode))
-                            arguments.Add("x-queue-mode", _rabbitMQOptions.QueueMode);
-
-                        if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueType))
-                            arguments.Add("x-queue-type", _rabbitMQOptions.QueueType);
-
-
-                        _channel.QueueDeclare(_rabbitMQOptions.QueueName, _rabbitMQOptions.Durable, _rabbitMQOptions.Exclusive, _rabbitMQOptions.AutoDelete, arguments);
                     }
                 }
             }
@@ -81,13 +76,16 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
             }
         }
 
-
         public void Subscribe()
         {
             string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            _appName = Assembly.GetEntryAssembly()!.GetName().Name;
+
             string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll");
 
             var eventType = typeof(IEvent);
+
             var handlerType = typeof(IDistributedEventHandler<>);
 
             List<string> routingKeys = new List<string>();
@@ -103,34 +101,46 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 foreach (var handler in handlers)
                 {
-                    var eventInterface = handler.GetInterfaces()
-                        .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType);
+                    var eventInterfaces = handler.GetInterfaces().Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType).ToList();
 
-                    var eventTypeArgument = eventInterface.GetGenericArguments()[0];
-
-                    if (eventType.IsAssignableFrom(eventTypeArgument))
+                    foreach (var eventInterface in eventInterfaces)
                     {
-                        var routingKey = eventTypeArgument.Name;
+                        var eventTypeArgument = eventInterface.GetGenericArguments()[0];
 
-                        _routingKeyTypes.Add(eventTypeArgument);
+                        if (eventType.IsAssignableFrom(eventTypeArgument))
+                        {
+                            var routingKey = eventTypeArgument.Name;
 
-                        routingKeys.Add(routingKey);
+                            _routingKeyTypes.Add(eventTypeArgument);
+
+                            routingKeys.Add(routingKey);
+                        }
                     }
                 }
             }
 
             foreach (var routingKey in routingKeys)
             {
-                _channel.QueueBind(_rabbitMQOptions.QueueName, _rabbitMQOptions.ExchangeName, routingKey);
+                var arguments = new Dictionary<string, object> { { "x-message-ttl", _rabbitMQOptions.MessageTTL } };
+
+                if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueMode))
+                    arguments.Add("x-queue-mode", _rabbitMQOptions.QueueMode);
+
+                if (!string.IsNullOrEmpty(_rabbitMQOptions.QueueType))
+                    arguments.Add("x-queue-type", _rabbitMQOptions.QueueType);
+
+                _channel!.QueueDeclare($"{_appName}.{_rabbitMQOptions.QueueName}", _rabbitMQOptions.Durable, _rabbitMQOptions.Exclusive, _rabbitMQOptions.AutoDelete, arguments);
+
+                _channel.QueueBind($"{_appName}.{_rabbitMQOptions.QueueName}", _rabbitMQOptions.ExchangeName, routingKey);
+
+                _consumer = new AsyncEventingBasicConsumer(_channel);
+
+                _channel!.BasicQos(0, 1, false);
+
+                _channel.BasicConsume(queue: $"{_appName}.{_rabbitMQOptions.QueueName}", autoAck: false, consumer: _consumer);
+
+                _consumer.Received += Received;
             }
-
-            _consumer = new AsyncEventingBasicConsumer(_channel);
-
-            _channel!.BasicQos(0, 1, false);
-
-            _channel.BasicConsume(queue: _rabbitMQOptions.QueueName, autoAck: false, consumer: _consumer);
-
-            _consumer.Received += Received;
         }
 
         private async Task Received(object sender, BasicDeliverEventArgs e)
@@ -151,7 +161,8 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                 if (eventType != null)
                 {
                     var eventMessageJson = Encoding.UTF8.GetString(e.Body.ToArray());
-                    var eventMessage = JsonConvert.DeserializeObject(eventMessageJson, eventType);
+
+                    var eventMessage = JsonConvert.DeserializeObject(eventMessageJson, eventType!);
 
                     using (var scope = _serviceProvider.CreateScope())
                     {
@@ -159,9 +170,41 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                         if (handler != null)
                         {
+
 #pragma warning disable CS8600
 #pragma warning disable CS8602
-                            await (Task)handler.GetType().GetMethod("HandleAsync").Invoke(handler, new object[] { eventMessage! });
+
+                            var retry = 0;
+
+                            var maxRetry = 0;
+
+                            var retryInterval = 0;
+
+                            var props = e.BasicProperties;
+
+                            if (props.Headers != null && props.Headers.TryGetValue("x-retry-time", out var headerValueRetryInterval)) retryInterval = Convert.ToInt32(headerValueRetryInterval);
+
+                            if (props.Headers != null && props.Headers.TryGetValue("x-retry", out var headerValueRetry)) retry = Convert.ToInt32(headerValueRetry);
+
+                            do
+                            {
+                                try
+                                {
+                                    maxRetry++;
+
+                                    await (Task)handler.GetType().GetMethod("HandleAsync", new[] { eventMessage.GetType() }).Invoke(handler, new object[] { eventMessage! });
+
+                                    break;
+                                }
+                                catch
+                                {
+                                    if (maxRetry > retry) throw;
+
+                                    await Task.Delay(retryInterval * 1000);
+                                }
+                            }
+                            while (true);
+
 #pragma warning restore CS8602
 #pragma warning restore CS8600
 
@@ -175,9 +218,13 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
                 }
                 await Task.CompletedTask;
             }
-            catch (Exception)
+            catch
             {
-                _channel!.BasicNack(deliveryTag: e.DeliveryTag, multiple: false, requeue: true);
+                var eventMessageJson = Encoding.UTF8.GetString(e.Body.ToArray());
+
+                _eventBusoptions.FailureCallback?.Invoke(e.RoutingKey, eventMessageJson);
+
+                _channel!.BasicAck(e.DeliveryTag, false);
 
                 throw;
             }
@@ -207,7 +254,9 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 props.Headers = new Dictionary<string, object>
                 {
-                    { "EventType",typeof(TEvent).Name }
+                    { "EventType",routingKey },
+                    { "x-retry",_eventBusoptions.RetryCount },
+                    { "x-retry-time",_eventBusoptions.RetryInterval }
                 };
 
                 _channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);
@@ -238,7 +287,9 @@ namespace EasyCore.EventBus.RabbitMQ.Exchange.Servers
 
                 props.Headers = new Dictionary<string, object>
                 {
-                    { "EventType",typeof(TEvent).Name }
+                    { "EventType",routingKey },
+                    { "x-retry",_eventBusoptions.RetryCount },
+                    { "x-retry-time",_eventBusoptions.RetryInterval },
                 };
 
                 _channel.BasicPublish(_rabbitMQOptions.ExchangeName, routingKey, props, body);

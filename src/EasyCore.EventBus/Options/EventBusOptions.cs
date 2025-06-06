@@ -34,12 +34,12 @@ namespace EasyCore.EventBus
         /// <summary>
         /// 交换机名称
         /// </summary>
-        public string ExchangeName { get; set; } = "event_bus";
+        public string ExchangeName { get; set; } = "EasyCore.EventBus";
 
         /// <summary>
         /// 队列名称
         /// </summary>
-        public string QueueName { get; set; } = "event_bus_queue";
+        public string QueueName { get; set; } = "EasyCore.Queue";
 
         /// <summary>
         /// 交换机类型
@@ -59,7 +59,12 @@ namespace EasyCore.EventBus
         /// <summary>
         /// 失败重试间隔（秒）
         /// </summary>
-        public int RetryInterval { get; set; } = 10;
+        public int RetryInterval { get; set; } = 3;
+
+        /// <summary>
+        /// 失败回调
+        /// </summary>
+        public Action<string, string>? FailureCallback { get; set; }
 
         /// <summary>
         /// 获取或设置队列消息自动删除时间，默认10天（以毫秒为单位）

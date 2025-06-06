@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApplicationDistributed.EventMessage
+namespace WinFormsApp.EventMessage
 {
-    public class LoadbalancingEventMessage : IEvent
+    public class FailureCallbackEventMessage : IEvent
     {
         public string Message { get; set; }
     }

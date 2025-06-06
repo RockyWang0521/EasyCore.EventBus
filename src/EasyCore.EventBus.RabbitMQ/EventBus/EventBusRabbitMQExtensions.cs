@@ -24,10 +24,18 @@ namespace EasyCore.EventBus.RabbitMQ
         public static EventBusOptions RabbitMQ(this EventBusOptions options, RabbitMQOptions rabbitMQOptions)
         {
             options.ExchangeName = rabbitMQOptions.ExchangeName;
+
             options.HostName = rabbitMQOptions.HostName;
+
             options.Password = rabbitMQOptions.Password;
+
             options.UserName = rabbitMQOptions.UserName;
+
             options.Port = rabbitMQOptions.Port;
+
+            options.ExchangeName = rabbitMQOptions.ExchangeName;
+
+            options.QueueName = rabbitMQOptions.QueueName;
 
             return options;
         }

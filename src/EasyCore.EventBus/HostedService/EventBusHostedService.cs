@@ -5,25 +5,19 @@ namespace EasyCore.EventBus.HostedService
 {
     public class EventBusHostedService : IHostedService
     {
-        private readonly IEventRabbitMQClient _eventMQClient;
+        private readonly IEventMessageQueueClient _MessageQueueClient;
 
-        public EventBusHostedService(IEventRabbitMQClient eventRabbitMQClient)
-        {
-            _eventMQClient = eventRabbitMQClient;
-        }
+        public EventBusHostedService(IEventMessageQueueClient MessageQueueClient) => _MessageQueueClient = MessageQueueClient;
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _eventMQClient.Create();
+            _MessageQueueClient.Connect();
 
-            _eventMQClient.Subscribe();
+            _MessageQueueClient.Subscribe();
 
             await Task.CompletedTask;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
-        }
+        public async Task StopAsync(CancellationToken cancellationToken) => await Task.CompletedTask;
     }
 }

@@ -158,5 +158,45 @@ docker run -d  --name rabbitmq -e RABBITMQ_DEFAULT_USER=123 -e RABBITMQ_DEFAULT_
       }
   }
 ```
+3. 失败执行回调
+注册环节中提供了 失败重试次数、失败重试时间以及失败执行回调函数(如果接收方接收到消息程序执行失败，就会间隔重试时间再次执行。执行多次达到设定的失败重试次数还是未执行成功，就会执行失败回调函数)
 
+
+发送方指定 失败重试次数、失败重试时间
+```
+services.EasyCoreEventBus(options =>
+{
+   options.RabbitMQ(opt =>
+   {
+       opt.HostName = "192.168.157.142";
+       opt.UserName = "123";
+       opt.Password = "123";
+       opt.Port = 5672;
+   });
+
+   //失败重试次数
+   options.RetryCount = 3;
+   //失败重试时间
+   options.RetryInterval = 5;
+});
+```
+
+接受方指定 失败执行回调函数
+```
+services.EasyCoreEventBus(options =>
+{
+   options.RabbitMQ(opt =>
+   {
+      opt.HostName = "192.168.157.142";
+      opt.UserName = "123";
+      opt.Password = "123";
+      opt.Port = 5672;
+   });
+   //失败执行回调函数
+   options.FailureCallback = (key, mes) =>
+   {
+       MessageBox.Show(mes, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+   };
+});
+```
 

@@ -1,34 +1,20 @@
 ﻿using EasyCore.EventBus.Event;
-using EasyCore.EventBus.RabbitMQ.Exchange.Interfaces;
+using EasyCore.EventBus.RabbitMQ.Exchange;
 
 namespace EasyCore.EventBus.RabbitMQ
 {
-    public class EventRabbitMQClient : IEventRabbitMQClient
+    public class EventRabbitMQClient : IEventMessageQueueClient
     {
-        private readonly IToipcExchangecs _toipcExchange;
+        private readonly IRabbitMQExchangecs _toipcExchange;
 
-        public EventRabbitMQClient(IToipcExchangecs toipcExchange)
-        {
-            _toipcExchange = toipcExchange;
-        }
-        public void Create()
-        {
-            _toipcExchange.Connect();
-        }
+        public EventRabbitMQClient(IRabbitMQExchangecs toipcExchange) => _toipcExchange = toipcExchange;
 
-        public bool Publish<TEvent>(TEvent eventMessage) where TEvent : IEvent
-        {
-            return _toipcExchange.Publish(eventMessage);
-        }
+        public void Connect() => _toipcExchange.Connect();
 
-        public async Task<bool> PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent
-        {
-            return await _toipcExchange.PublishAsync(eventMessage);
-        }
+        public void Subscribe() => _toipcExchange.Subscribe();
 
-        public void Subscribe()
-        {
-            _toipcExchange.Subscribe();
-        }
+        public bool Publish<TEvent>(TEvent eventMessage) where TEvent : IEvent => _toipcExchange.Publish(eventMessage);
+
+        public async Task<bool> PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent => await _toipcExchange.PublishAsync(eventMessage);
     }
 }

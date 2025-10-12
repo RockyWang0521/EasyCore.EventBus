@@ -4,8 +4,16 @@ namespace EasyCore.EventBus.RabbitMQ
 {
     public interface IConnectionChannel
     {
-        IConnection GetConnection();
+        /// <summary>
+        /// Get RabbitMQ Connection
+        /// </summary>
+        /// <returns></returns>
+        IConnection GetConnection(IConnection? connection);
 
-        IModel CreateModel();
+        /// <summary>
+        /// Create RabbitMQ Model
+        /// </summary>
+        /// <returns></returns>
+        IModel CreateModel(IConnection? connection);
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace EasyCore.EventBus.Event
 {
     /// <summary>
-    /// 分布式事件处理接口定义
+    /// Distributed Event Handling Interface Definition
     /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
+    /// <typeparam name="TEvent">Event Object</typeparam>
     public interface IDistributedEventHandler<TEvent> : IEventHandler<TEvent> where TEvent : IEvent
     {
 

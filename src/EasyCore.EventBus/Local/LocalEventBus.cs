@@ -12,9 +12,10 @@ namespace EasyCore.EventBus.Local
             _serviceProvider = serviceProvider;
         }
 
-        public async Task PublishAsync<T>(T eventMessage) where T : IEvent
+        public async Task PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent
         {
-            var handlers = _serviceProvider.GetServices<ILocalEventHandler<T>>();
+            var handlers = _serviceProvider.GetServices<ILocalEventHandler<TEvent>>();
+
             foreach (var handler in handlers)
             {
                 await handler.HandleAsync(eventMessage);

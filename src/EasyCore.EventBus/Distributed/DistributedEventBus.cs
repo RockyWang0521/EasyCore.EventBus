@@ -4,21 +4,12 @@ namespace EasyCore.EventBus.Distributed
 {
     public class DistributedEventBus : IDistributedEventBus
     {
-        private readonly IEventRabbitMQClient _eventRabbitMQClient;
+        private readonly IEventMessageQueueClient _MessageQueueClient;
 
-        public DistributedEventBus(IEventRabbitMQClient eventRabbitMQClient)
-        {
-            _eventRabbitMQClient = eventRabbitMQClient;
-        }
+        public DistributedEventBus(IEventMessageQueueClient MessageQueueClient) => _MessageQueueClient = MessageQueueClient;
 
-        public bool Publish<TEvent>(TEvent eventMessage) where TEvent : IEvent
-        {
-            return _eventRabbitMQClient.Publish(eventMessage);
-        }
+        public bool Publish<TEvent>(TEvent eventMessage) where TEvent : IEvent => _MessageQueueClient.Publish(eventMessage);
 
-        public async Task<bool> PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent
-        {
-            return await _eventRabbitMQClient.PublishAsync(eventMessage);
-        }
+        public async Task<bool> PublishAsync<TEvent>(TEvent eventMessage) where TEvent : IEvent => await _MessageQueueClient.PublishAsync(eventMessage);
     }
 }

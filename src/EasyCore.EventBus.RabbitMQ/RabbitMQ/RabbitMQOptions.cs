@@ -3,72 +3,72 @@
     public class RabbitMQOptions
     {
         /// <summary>
-        /// RabbitMQ主机名
+        /// RabbitMQ HostName
         /// </summary>
-        public string HostName { get; set; } 
+        public string HostName { get; set; } = "localhost";
 
         /// <summary>
-        /// RabbitMQ用户名
+        /// RabbitMQ UserName
         /// </summary>
-        public string UserName { get; set; }
+        public string UserName { get; set; } = "guest";
 
         /// <summary>
-        /// RabbitMQ密码
+        /// RabbitMQ Password
         /// </summary>
-        public string Password { get; set; }
+        public string Password { get; set; } = "guest";
 
         /// <summary>
-        /// RabbitMQ端口
+        /// RabbitMQ Port
         /// </summary>
-        public int Port { get; set; }
+        public int Port { get; set; } = 5672;
 
         /// <summary>
-        /// 交换机类型
-        /// </summary>
-        public  string ExchangeType = "topic";
-
-        /// <summary>
-        /// 虚拟主机
-        /// </summary>
-        public string VirtualHost { get; set; } = "/";
-
-        /// <summary>
-        /// 交换机名称
+        /// RabbitMQ ExchangeName
         /// </summary>
         public string ExchangeName { get; set; } = "EasyCore.EventBus";
 
         /// <summary>
-        /// 队列名称
+        /// RabbitMQ QueueName
         /// </summary>
         public string QueueName { get; set; } = "EasyCore.Queue";
 
         /// <summary>
-        /// 获取或设置队列消息自动删除时间，默认10天（以毫秒为单位）
+        /// RabbitMQ ExchangeType
+        /// </summary>
+        public string ExchangeType { get; set; } = "topic";
+
+        /// <summary>
+        /// RabbitMQ VirtualHost
+        /// </summary>
+        public string VirtualHost { get; set; } = "/";
+
+        /// <summary>
+        /// Gets or sets the queue message auto-delete time, default is 10 days (in milliseconds).
         /// </summary>
         public int MessageTTL { get; set; } = 864000000;
 
         /// <summary>
-        ///  队列模式
+        ///  RabbitMQ QueueMode
         /// </summary>
         public string QueueMode { get; set; } = default!;
 
         /// <summary>
-        /// 是否持久化
+        /// RabbitMQ Durable
         /// </summary>
         public bool Durable { get; set; } = true;
 
         /// <summary>
-        /// 是否排他
+        /// RabbitMQ Exclusive
         /// </summary>
         public bool Exclusive { get; set; } = false;
 
         /// <summary>
-        /// 是否自动删除
+        /// RabbitMQ AutoDelete
         /// </summary>
         public bool AutoDelete { get; set; } = false;
 
         /// <summary>
-        /// 队列类型
+        /// RabbitMQ QueueType
         /// </summary>
         public string QueueType { get; set; } = default!;
     }

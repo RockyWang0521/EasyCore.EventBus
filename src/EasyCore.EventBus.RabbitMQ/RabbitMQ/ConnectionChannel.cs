@@ -3,30 +3,30 @@ using RabbitMQ.Client;
 
 namespace EasyCore.EventBus.RabbitMQ
 {
-    public class ConnectionChannel : IConnectionChannel, IDisposable
+    public class ConnectionChannel : IConnectionChannel
     {
-        private IConnection? _connection;
         private readonly RabbitMQOptions _options;
 
-        public ConnectionChannel(IOptions<RabbitMQOptions> options)
+        public ConnectionChannel(IOptions<RabbitMQOptions> options) => _options = options.Value;
+
+        public IConnection GetConnection(IConnection? connection)
         {
-            _options = options.Value;
+            if (connection is not null)
+            {
+                if (connection.IsOpen)
+                {
+                    connection.Close();
+
+                    connection.Dispose();
+                }
+
+                connection = null;
+            }
+
+            return CreateConnection(connection);
         }
 
-        public void Dispose()
-        {
-            _connection!.Dispose();
-        }
-
-        public IConnection GetConnection()
-        {
-            _connection?.Close();
-            _connection?.Dispose();
-            _connection = CreateConnection();
-            return _connection;
-        }
-
-        public IConnection CreateConnection()
+        public IConnection CreateConnection(IConnection? connection)
         {
             var factory = new ConnectionFactory()
             {
@@ -45,20 +45,18 @@ namespace EasyCore.EventBus.RabbitMQ
                 SocketWriteTimeout = TimeSpan.FromSeconds(30)
             };
 
-            if (_options.HostName.Contains(",")) return _connection = factory.CreateConnection(AmqpTcpEndpoint.ParseMultiple(_options.HostName));
+            if (_options.HostName.Contains(",")) return connection = factory.CreateConnection(AmqpTcpEndpoint.ParseMultiple(_options.HostName));
 
             factory.HostName = _options.HostName;
 
-            return _connection = factory.CreateConnection();
+            return connection = factory.CreateConnection();
         }
 
-        public IModel CreateModel()
+        public IModel CreateModel(IConnection? connection)
         {
-            if (_connection == null)
-            {
-                throw new InvalidOperationException("Connection is null");
-            }
-            return _connection.CreateModel();
+            if (connection == null) connection = CreateConnection(connection);
+
+            return connection.CreateModel();
         }
     }
 }

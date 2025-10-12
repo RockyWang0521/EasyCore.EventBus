@@ -1,7 +1,7 @@
 ﻿namespace EasyCore.EventBus.Event
 {
     /// <summary>
-    /// 事件定义基础接口
+    /// Event Definition Base Interface
     /// </summary>
     public interface IEvent
     {

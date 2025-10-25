@@ -25,6 +25,17 @@ EventBus 可以根据其实现的不同，分为几种不同的类型：
 
 #### 使用说明
 
+EasyCore.EventBus提供了多个消息队列支持包
+
+```
+EasyCore.EventBus
+EasyCore.EventBus.Kafka
+EasyCore.EventBus.Pulsar
+EasyCore.EventBus.RabbitMQ
+```
+可根据需要下载对应的支持包，支持的队列有Kafka、Pulsar、RabbitMQ。
+
+
 1.  本地EventBus
 
 winform注册
@@ -199,4 +210,205 @@ services.EasyCoreEventBus(options =>
    };
 });
 ```
+
+### EasyCore.EventBus.Kafka
+
+1.注册
+
+```
+using EasyCore.EventBus;
+using EasyCore.EventBus.Kafka;
+
+builder.Services.EasyCoreEventBus(options =>
+{
+   options.Kafka("localhost:9092");
+});
+```
+
+2.发布和订阅
+
+发布
+```
+[Route("api/[controller]")]
+[ApiController]
+public class PublishController : ControllerBase
+{
+    private readonly IDistributedEventBus _distributedEventBus;
+
+    public PublishController(IDistributedEventBus distributedEventBus)
+    {
+        _distributedEventBus = distributedEventBus;
+    }
+
+    [HttpPost]
+    public async Task Publish()
+    {
+        var em = new WebEventMessage()
+        {
+            Message = "Hello, world!"
+        };
+
+        await _distributedEventBus.PublishAsync(em);
+    }
+}
+```
+订阅
+
+```
+using EasyCore.EventBus.Event;
+
+public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+{
+    private readonly ILogger<MyEventMessage> _logger;
+
+    public MyEventMessage(ILogger<MyEventMessage> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task HandleAsync(WebEventMessage eventMessage)
+    {
+        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
+
+        await Task.CompletedTask;
+    }
+}
+```
+
+### EasyCore.EventBus.Pulsar
+
+1.注册
+
+```
+using EasyCore.EventBus;
+using EasyCore.EventBus.Pulsar;
+
+builder.Services.EasyCoreEventBus(options =>
+{
+    options.Pulsar("pulsar://localhost:6650");
+});
+```
+
+2.发布和订阅
+
+发布
+```
+[Route("api/[controller]")]
+[ApiController]
+public class PublishController : ControllerBase
+{
+    private readonly IDistributedEventBus _distributedEventBus;
+
+    public PublishController(IDistributedEventBus distributedEventBus)
+    {
+        _distributedEventBus = distributedEventBus;
+    }
+
+    [HttpPost]
+    public async Task Publish()
+    {
+        var em = new WebEventMessage()
+        {
+            Message = "Hello, world!"
+        };
+
+        await _distributedEventBus.PublishAsync(em);
+    }
+}
+```
+订阅
+
+```
+using EasyCore.EventBus.Event;
+
+public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+{
+    private readonly ILogger<MyEventMessage> _logger;
+
+    public MyEventMessage(ILogger<MyEventMessage> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task HandleAsync(WebEventMessage eventMessage)
+    {
+        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
+
+        await Task.CompletedTask;
+    }
+}
+```
+### EasyCore.EventBus.RabbitMQ
+
+1.注册
+```
+using EasyCore.EventBus;
+using EasyCore.EventBus.RabbitMQ;
+
+builder.Services.EasyCoreEventBus(options =>
+{
+   options.RabbitMQ("localhost");
+});
+```
+
+2.发布和订阅
+
+发布
+```
+[Route("api/[controller]")]
+[ApiController]
+public class PublishController : ControllerBase
+{
+    private readonly IDistributedEventBus _distributedEventBus;
+
+    public PublishController(IDistributedEventBus distributedEventBus)
+    {
+        _distributedEventBus = distributedEventBus;
+    }
+
+    [HttpPost]
+    public async Task Publish()
+    {
+        var em = new WebEventMessage()
+        {
+            Message = "Hello, world!"
+        };
+
+        await _distributedEventBus.PublishAsync(em);
+    }
+}
+```
+订阅
+
+```
+using EasyCore.EventBus.Event;
+
+public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+{
+    private readonly ILogger<MyEventMessage> _logger;
+
+    public MyEventMessage(ILogger<MyEventMessage> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task HandleAsync(WebEventMessage eventMessage)
+    {
+        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
+
+        await Task.CompletedTask;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
 

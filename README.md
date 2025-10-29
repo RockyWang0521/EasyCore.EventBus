@@ -32,8 +32,9 @@ EasyCore.EventBus
 EasyCore.EventBus.Kafka
 EasyCore.EventBus.Pulsar
 EasyCore.EventBus.RabbitMQ
+EasyCore.EventBus.RedisStreams
 ```
-可根据需要下载对应的支持包，支持的队列有Kafka、Pulsar、RabbitMQ。
+可根据需要下载对应的支持包，支持的队列有Kafka、Pulsar、RabbitMQ、RedisStreams。
 
 
 1.  本地EventBus
@@ -348,6 +349,68 @@ using EasyCore.EventBus.RabbitMQ;
 builder.Services.EasyCoreEventBus(options =>
 {
    options.RabbitMQ("localhost");
+});
+```
+
+2.发布和订阅
+
+发布
+```
+[Route("api/[controller]")]
+[ApiController]
+public class PublishController : ControllerBase
+{
+    private readonly IDistributedEventBus _distributedEventBus;
+
+    public PublishController(IDistributedEventBus distributedEventBus)
+    {
+        _distributedEventBus = distributedEventBus;
+    }
+
+    [HttpPost]
+    public async Task Publish()
+    {
+        var em = new WebEventMessage()
+        {
+            Message = "Hello, world!"
+        };
+
+        await _distributedEventBus.PublishAsync(em);
+    }
+}
+```
+订阅
+
+```
+using EasyCore.EventBus.Event;
+
+public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+{
+    private readonly ILogger<MyEventMessage> _logger;
+
+    public MyEventMessage(ILogger<MyEventMessage> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task HandleAsync(WebEventMessage eventMessage)
+    {
+        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
+
+        await Task.CompletedTask;
+    }
+}
+```
+### EasyCore.EventBus.RedisStreams
+
+1.注册
+```
+using EasyCore.EventBus;
+using EasyCore.EventBus.RedisStreams;
+
+builder.Services.EasyCoreEventBus(options =>
+{
+   options.RedisStreams(new List<string> { "localhost:6379" });
 });
 ```
 

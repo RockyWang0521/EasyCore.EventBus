@@ -1,422 +1,264 @@
-# EasyCore.EventBus
+# EasyCore.EventBus - .NET Core 事件总线解决方案 🚀
 
-#### 介绍
-EasyCore.EventBus
-轻松实现 .Net Core EventBus
+## 📋 项目介绍
 
-#### EventBus
-EventBus（事件总线）是一个用于事件驱动架构（EDA, Event-Driven Architecture）中的基础组件。它允许不同组件、模块或服务之间进行异步通信，常用于分布式系统、微服务架构以及单体应用的模块之间。
-EventBus 通过在应用程序内部提供一种发布-订阅（Pub/Sub）模式的机制来帮助实现不同部分的解耦。发布者不需要知道订阅者的具体实现，而订阅者也不需要了解发布者的信息。事件总线可以是内存中的（例如在同一进程内传递消息），也可以是基于外部消息队列（例如 RabbitMQ、Kafka、Redis）的系统。
-EventBus 的核心概念是事件和订阅者。事件表示系统中发生的某种行为或状态的变化，而订阅者是处理这些事件的对象。EventBus 本身充当了事件的传输媒介。发布者发布事件后，EventBus 会根据事件的类型将其传递给所有已订阅该事件类型的订阅者。
+EasyCore.EventBus 是一个专为 .NET Core 设计的轻量级事件总线库，帮助开发者轻松实现事件驱动架构（EDA）。该库支持多种消息队列作为事件传输媒介，提供了统一的事件发布-订阅接口，让不同组件、模块或服务之间的异步通信变得更加简单。
 
-发布（Publish）：发布者将事件推送到 EventBus，通常包含一些与事件相关的信息。
-订阅（Subscribe）：订阅者订阅感兴趣的事件类型，当这些事件被发布时，订阅者会接收到事件并作出响应。
+🎯 核心概念
+事件总线（EventBus）
+事件总线是事件驱动架构中的核心组件，它基于发布-订阅（Pub/Sub）模式，实现了系统各部分的解耦：
 
-EventBus 的好处在于它促进了组件之间的松耦合。发布者无需关心事件会被谁处理，也无需了解具体的处理逻辑；同样，订阅者也不用关心事件是由哪个发布者发出的，或者事件的生成和发布机制如何。
+| 组件     | 角色    | 职责              |
+|--------|-------|-----------------|
+| 📤 发布者 | 事件生产者 | 将事件推送到 EventBus |
+| 📥 订阅者 | 事件消费者 | 订阅并处理感兴趣的事件     |
+| 📨 事件  | 消息载体  | 表示系统中的状态变化或行为   |
 
-EventBus 可以根据其实现的不同，分为几种不同的类型：
+🔌 支持的消息队列
+EasyCore.EventBus 提供了多种消息队列支持：
 
-内存 EventBus：所有的事件都在内存中传播，适用于单体应用或同一进程内的组件之间的通信。
-基于消息队列的 EventBus：通过消息队列（如 RabbitMQ、Kafka、Redis 等）将事件传递到其他系统或服务中。适用于微服务架构和分布式系统。
-这种基于消息队列的 EventBus 能够支持跨进程、跨机器甚至跨网络的事件传递，通常具有较高的可扩展性和容错性。
-
-此项目实现了winfrom之间的EventBus，以及winform与web之间的EventBus。基于RabbitMQ作为消息传递的媒介。
-
-
-#### 使用说明
-
-EasyCore.EventBus提供了多个消息队列支持包
-
-```
-EasyCore.EventBus
-EasyCore.EventBus.Kafka
-EasyCore.EventBus.Pulsar
-EasyCore.EventBus.RabbitMQ
-EasyCore.EventBus.RedisStreams
-```
-可根据需要下载对应的支持包，支持的队列有Kafka、Pulsar、RabbitMQ、RedisStreams。
+| 包名称                            | 消息队列          | 特性          |
+|--------------------------------|---------------|-------------|
+| EasyCore.EventBus.Kafka        | Apache Kafka  | 高吞吐量、分布式    |
+| EasyCore.EventBus.Pulsar       | Apache Pulsar | 低延迟、云原生     |
+| EasyCore.EventBus.RabbitMQ     | RabbitMQ      | 并发量高、AMQP协议 |
+| EasyCore.EventBus.RedisStreams | Redis Streams | 内存级性能、简单易用  |
 
 
-1.  本地EventBus
+## 🚀 快速开始
 
-winform注册
+### 1. 本地 EventBus（进程内通信）
+
+#### WinForms 应用配置 🖥️
 
 ```
-  [STAThread]
-  static void Main()
-  {
-      var host = CreateHostBuilder().Build();
+[STAThread]
+static void Main()
+{
+    var host = CreateHostBuilder().Build();
 
-      ApplicationConfiguration.Initialize();
+    ApplicationConfiguration.Initialize();
 
-      var mainForm = host.Services.GetRequiredService<Main>();
+    var mainForm = host.Services.GetRequiredService<Main>();
+    var backgroundService = host.Services.GetRequiredService<IHostedService>();
 
-      var backgroundService = host.Services.GetRequiredService<IHostedService>();
+    backgroundService.StartAsync(default).Wait();
+    Application.Run(mainForm);
+}
 
-      backgroundService.StartAsync(default).Wait();
-
-      Application.Run(mainForm);
-  }
-
-  public static IHostBuilder CreateHostBuilder() =>
-  Host.CreateDefaultBuilder()
-      .ConfigureServices((hostContext, services) =>
-      {
-          services.AddSingleton<Main>();
-
-          services.AddAppEventBus(options =>
-          {
-              options.RabbitMQ(opt =>
-              {
-                  opt.HostName = "192.168.157.142";
-                  opt.UserName = "123";
-                  opt.Password = "123";
-                  opt.Port = 5672;
-              });
-          });
-      });
-```
-web注册
-
-```
-  public class Program
-  {
-      public static void Main(string[] args)
-      {
-          var builder = WebApplication.CreateBuilder(args);
-
-          // Add services to the container.
-
-          builder.Services.AddControllers();
-          // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-          builder.Services.AddEndpointsApiExplorer();
-          builder.Services.AddSwaggerGen();
-
-          builder.Services.AddAppEventBus(options =>
-          {
-              options.RabbitMQ(opt =>
-              {
-                  opt.HostName = "192.168.157.142";
-                  opt.UserName = "123";
-                  opt.Password = "123";
-                  opt.Port = 5672;
-              });
-          });
-
-          var app = builder.Build();
-
-          // Configure the HTTP request pipeline.
-          if (app.Environment.IsDevelopment())
-          {
-              app.UseSwagger();
-              app.UseSwaggerUI();
-          }
-
-          app.UseAuthorization();
-
-
-          app.MapControllers();
-
-          app.Run();
-      }
-```
-
-继承事件基础类
-```
-    public class LocalEventMessage : IEvent
-    {
-        public string Message { get; set; }
-    }
-```
-实现抽象ILocalEventHandler中的细节
-
-```
-    public class MyLocalEventHandler : ILocalEventHandler<LocalEventMessage>
-    {
-        public async Task HandleAsync(LocalEventMessage eventMessage)
+public static IHostBuilder CreateHostBuilder() =>
+    Host.CreateDefaultBuilder()
+        .ConfigureServices((hostContext, services) =>
         {
-            // Do something with the event message
+            services.AddSingleton<Main>();
+            
+            // 🎯 注册 EventBus 服务
+            services.AddAppEventBus(options =>
+            {
+                options.RabbitMQ(opt =>
+                {
+                    opt.HostName = "192.168.157.142";
+                    opt.UserName = "123";
+                    opt.Password = "123";
+                    opt.Port = 5672;
+                });
+            });
+        });
+```
 
-            await Task.CompletedTask;
+#### Web API 配置 🌐
+
+```
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // 🎯 注册 EventBus 服务
+        builder.Services.AddAppEventBus(options =>
+        {
+            options.RabbitMQ(opt =>
+            {
+                opt.HostName = "192.168.157.142";
+                opt.UserName = "123";
+                opt.Password = "123";
+                opt.Port = 5672;
+            });
+        });
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
-    }
-```
 
-
-2.  分布式EventBus
-docker启动一个RabbitMQ
-
-```
-docker run -d  --name rabbitmq -e RABBITMQ_DEFAULT_USER=123 -e RABBITMQ_DEFAULT_PASS=123 -p 15672:15672 -p 5672:5672 rabbitmq:3-management
-```
-
-继承事件基础类
-```
-    public class DistributedEventMessage : IEvent
-    {
-        public string Message { get; set; }
-    }
-```
-实现抽象IDistributedEventHandler中的细节
-
-```
-  public class MyDistributedEventHandler : IDistributedEventHandler<WebDistributedEventMessage>
-  {
-      public async Task HandleAsync(WebDistributedEventMessage eventMessage)
-      {
-          // Do something with the event message
-
-          await Task.CompletedTask;
-      }
-  }
-```
-3. 失败执行回调
-注册环节中提供了 失败重试次数、失败重试时间以及失败执行回调函数(如果接收方接收到消息程序执行失败，就会间隔重试时间再次执行。执行多次达到设定的失败重试次数还是未执行成功，就会执行失败回调函数)
-
-
-发送方指定 失败重试次数、失败重试时间
-```
-services.EasyCoreEventBus(options =>
-{
-   options.RabbitMQ(opt =>
-   {
-       opt.HostName = "192.168.157.142";
-       opt.UserName = "123";
-       opt.Password = "123";
-       opt.Port = 5672;
-   });
-
-   //失败重试次数
-   options.RetryCount = 3;
-   //失败重试时间
-   options.RetryInterval = 5;
-});
-```
-
-接受方指定 失败执行回调函数
-```
-services.EasyCoreEventBus(options =>
-{
-   options.RabbitMQ(opt =>
-   {
-      opt.HostName = "192.168.157.142";
-      opt.UserName = "123";
-      opt.Password = "123";
-      opt.Port = 5672;
-   });
-   //失败执行回调函数
-   options.FailureCallback = (key, mes) =>
-   {
-       MessageBox.Show(mes, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-   };
-});
-```
-
-### EasyCore.EventBus.Kafka
-
-1.注册
-
-```
-using EasyCore.EventBus;
-using EasyCore.EventBus.Kafka;
-
-builder.Services.EasyCoreEventBus(options =>
-{
-   options.Kafka("localhost:9092");
-});
-```
-
-2.发布和订阅
-
-发布
-```
-[Route("api/[controller]")]
-[ApiController]
-public class PublishController : ControllerBase
-{
-    private readonly IDistributedEventBus _distributedEventBus;
-
-    public PublishController(IDistributedEventBus distributedEventBus)
-    {
-        _distributedEventBus = distributedEventBus;
-    }
-
-    [HttpPost]
-    public async Task Publish()
-    {
-        var em = new WebEventMessage()
-        {
-            Message = "Hello, world!"
-        };
-
-        await _distributedEventBus.PublishAsync(em);
+        app.UseAuthorization();
+        app.MapControllers();
+        app.Run();
     }
 }
 ```
-订阅
+### 2. 定义事件和处理器
+
+#### 事件定义 📨
 
 ```
-using EasyCore.EventBus.Event;
-
-public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+public class LocalEventMessage : IEvent
 {
-    private readonly ILogger<MyEventMessage> _logger;
+    public string Message { get; set; }
+    public DateTime Timestamp { get; set; } = DateTime.Now;
+}
+```
+#### 事件处理器 ⚙️
+```
+public class MyLocalEventHandler : ILocalEventHandler<LocalEventMessage>
+{
+    private readonly ILogger<MyLocalEventHandler> _logger;
 
-    public MyEventMessage(ILogger<MyEventMessage> logger)
+    public MyLocalEventHandler(ILogger<MyLocalEventHandler> logger)
     {
         _logger = logger;
     }
 
-    public async Task HandleAsync(WebEventMessage eventMessage)
+    public async Task HandleAsync(LocalEventMessage eventMessage)
     {
-        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
-
+        // ✅ 处理事件逻辑
+        _logger.LogInformation($"收到事件: {eventMessage.Message} at {eventMessage.Timestamp}");
+        
         await Task.CompletedTask;
     }
 }
 ```
-
-### EasyCore.EventBus.Pulsar
-
-1.注册
+### 3. 分布式 EventBus
+#### Docker 启动 RabbitMQ 🐳
 
 ```
-using EasyCore.EventBus;
-using EasyCore.EventBus.Pulsar;
+docker run -d --name rabbitmq \
+  -e RABBITMQ_DEFAULT_USER=123 \
+  -e RABBITMQ_DEFAULT_PASS=123 \
+  -p 15672:15672 -p 5672:5672 \
+  rabbitmq:3-management
+```
+#### 分布式事件定义 🌍
 
+```
+public class DistributedEventMessage : IEvent
+{
+    public string Message { get; set; }
+    public string Source { get; set; }
+    public Guid EventId { get; set; } = Guid.NewGuid();
+}
+```
+
+#### 分布式事件处理器 🔄
+
+```
+public class MyDistributedEventHandler : IDistributedEventHandler<DistributedEventMessage>
+{
+    private readonly ILogger<MyDistributedEventHandler> _logger;
+
+    public MyDistributedEventHandler(ILogger<MyDistributedEventHandler> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task HandleAsync(DistributedEventMessage eventMessage)
+    {
+        _logger.LogInformation($"处理分布式事件: {eventMessage.Message} from {eventMessage.Source}");
+        
+        // 🔧 业务逻辑处理
+        await ProcessBusinessLogic(eventMessage);
+        
+        await Task.CompletedTask;
+    }
+    
+    private async Task ProcessBusinessLogic(DistributedEventMessage message)
+    {
+        // 业务处理代码
+        await Task.Delay(100);
+    }
+}
+```
+#### ⚡ 高级特性
+失败重试机制 🔄 发送方配置
+```
+services.EasyCoreEventBus(options =>
+{
+    options.RabbitMQ(opt =>
+    {
+        opt.HostName = "192.168.157.142";
+        opt.UserName = "123";
+        opt.Password = "123";
+        opt.Port = 5672;
+    });
+
+    // 🔧 重试配置
+    options.RetryCount = 3;      // 失败重试次数
+    options.RetryInterval = 5;   // 重试间隔(秒)
+});
+```
+
+#### 接收方配置
+
+```
+services.EasyCoreEventBus(options =>
+{
+    options.RabbitMQ(opt =>
+    {
+        opt.HostName = "192.168.157.142";
+        opt.UserName = "123";
+        opt.Password = "123";
+        opt.Port = 5672;
+    });
+    
+    // 🚨 失败回调函数
+    options.FailureCallback = (key, message) =>
+    {
+        MessageBox.Show($"事件处理失败: {message}", 
+            "错误", 
+            MessageBoxButtons.OK, 
+            MessageBoxIcon.Error);
+    };
+});
+```
+### 📊 各消息队列配置示例
+#### 1.Kafka 配置 🔥
+```
+builder.Services.EasyCoreEventBus(options =>
+{
+    options.Kafka("localhost:9092");
+});
+```
+#### 2.Pulsar 配置 ⚡
+```
 builder.Services.EasyCoreEventBus(options =>
 {
     options.Pulsar("pulsar://localhost:6650");
 });
 ```
-
-2.发布和订阅
-
-发布
+#### 3.RabbitMQ 配置 🐇
 ```
-[Route("api/[controller]")]
-[ApiController]
-public class PublishController : ControllerBase
-{
-    private readonly IDistributedEventBus _distributedEventBus;
-
-    public PublishController(IDistributedEventBus distributedEventBus)
-    {
-        _distributedEventBus = distributedEventBus;
-    }
-
-    [HttpPost]
-    public async Task Publish()
-    {
-        var em = new WebEventMessage()
-        {
-            Message = "Hello, world!"
-        };
-
-        await _distributedEventBus.PublishAsync(em);
-    }
-}
-```
-订阅
-
-```
-using EasyCore.EventBus.Event;
-
-public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
-{
-    private readonly ILogger<MyEventMessage> _logger;
-
-    public MyEventMessage(ILogger<MyEventMessage> logger)
-    {
-        _logger = logger;
-    }
-
-    public async Task HandleAsync(WebEventMessage eventMessage)
-    {
-        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
-
-        await Task.CompletedTask;
-    }
-}
-```
-### EasyCore.EventBus.RabbitMQ
-
-1.注册
-```
-using EasyCore.EventBus;
-using EasyCore.EventBus.RabbitMQ;
-
 builder.Services.EasyCoreEventBus(options =>
 {
-   options.RabbitMQ("localhost");
+    options.RabbitMQ("localhost");
 });
 ```
-
-2.发布和订阅
-
-发布
+#### 4.Redis Streams 配置 🔴
 ```
-[Route("api/[controller]")]
-[ApiController]
-public class PublishController : ControllerBase
-{
-    private readonly IDistributedEventBus _distributedEventBus;
-
-    public PublishController(IDistributedEventBus distributedEventBus)
-    {
-        _distributedEventBus = distributedEventBus;
-    }
-
-    [HttpPost]
-    public async Task Publish()
-    {
-        var em = new WebEventMessage()
-        {
-            Message = "Hello, world!"
-        };
-
-        await _distributedEventBus.PublishAsync(em);
-    }
-}
-```
-订阅
-
-```
-using EasyCore.EventBus.Event;
-
-public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
-{
-    private readonly ILogger<MyEventMessage> _logger;
-
-    public MyEventMessage(ILogger<MyEventMessage> logger)
-    {
-        _logger = logger;
-    }
-
-    public async Task HandleAsync(WebEventMessage eventMessage)
-    {
-        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
-
-        await Task.CompletedTask;
-    }
-}
-```
-### EasyCore.EventBus.RedisStreams
-
-1.注册
-```
-using EasyCore.EventBus;
-using EasyCore.EventBus.RedisStreams;
-
 builder.Services.EasyCoreEventBus(options =>
 {
-   options.RedisStreams(new List<string> { "localhost:6379" });
+    options.RedisStreams(new List<string> { "localhost:6379" });
 });
 ```
-
-2.发布和订阅
-
-发布
+### 🎮 使用示例
+#### 发布事件
 ```
 [Route("api/[controller]")]
 [ApiController]
@@ -430,48 +272,72 @@ public class PublishController : ControllerBase
     }
 
     [HttpPost]
-    public async Task Publish()
+    public async Task<IActionResult> Publish([FromBody] string message)
     {
-        var em = new WebEventMessage()
+        var eventMessage = new WebEventMessage()
         {
-            Message = "Hello, world!"
+            Message = message,
+            Timestamp = DateTime.UtcNow
         };
 
-        await _distributedEventBus.PublishAsync(em);
+        await _distributedEventBus.PublishAsync(eventMessage);
+        
+        return Ok(new { success = true, eventId = eventMessage.EventId });
     }
 }
 ```
-订阅
-
+#### 事件处理监控 📈
 ```
-using EasyCore.EventBus.Event;
-
-public class MyEventMessage : IDistributedEventHandler<WebEventMessage>
+public class MonitoringEventHandler : IDistributedEventHandler<WebEventMessage>
 {
-    private readonly ILogger<MyEventMessage> _logger;
+    private readonly ILogger<MonitoringEventHandler> _logger;
+    private readonly IMetricsService _metrics;
 
-    public MyEventMessage(ILogger<MyEventMessage> logger)
+    public MonitoringEventHandler(ILogger<MonitoringEventHandler> logger, IMetricsService metrics)
     {
         _logger = logger;
+        _metrics = metrics;
     }
 
     public async Task HandleAsync(WebEventMessage eventMessage)
     {
-        _logger.LogInformation($"Received event message: {eventMessage.Message}--{Guid.NewGuid()}");
-
-        await Task.CompletedTask;
+        var stopwatch = Stopwatch.StartNew();
+        
+        try
+        {
+            _logger.LogInformation($"开始处理事件: {eventMessage.Message}");
+            
+            // 📊 记录指标
+            _metrics.IncrementEventCount();
+            
+            await ProcessEvent(eventMessage);
+            
+            stopwatch.Stop();
+            _metrics.RecordProcessingTime(stopwatch.ElapsedMilliseconds);
+            
+            _logger.LogInformation($"事件处理完成: {eventMessage.Message}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"事件处理失败: {eventMessage.Message}");
+            _metrics.IncrementErrorCount();
+            throw;
+        }
     }
 }
 ```
+#### 🏗️ 架构优势
+
+| 特性       | 优势    | 说明                                     |
+|----------|-------|----------------------------------------|
+| 🔌 多队列支持 | 灵活选择  | 支持 Kafka、Pulsar、RabbitMQ、Redis Streams |
+| ⚡ 高性能    | 低延迟   | 优化的消息序列化和传输机制                          |
+| 🔒 可靠性   | 消息持久化 | 支持失败重试                                 |
+| 🎯 易用性   | 简单API | 统一的发布-订阅接口                             |
+| 🔧 可扩展   | 插件化架构 | 易于扩展新的消息队列支持                           |
 
 
+#### 📝 总结
+EasyCore.EventBus 为 .NET Core 应用程序提供了一个功能丰富、易于使用的事件总线解决方案。无论是单体应用中的模块解耦，还是微服务架构中的跨服务通信，都能通过统一的 API 轻松实现。其强大的失败重试机制和多消息队列支持，让开发者可以专注于业务逻辑，而不用关心底层通信细节。
 
-
-
-
-
-
-
-
-
-
+开始使用 EasyCore.EventBus，构建更加松耦合、可扩展的 .NET Core 应用程序！🎉

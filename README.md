@@ -228,7 +228,7 @@ services.EasyCoreEventBus(options =>
     };
 });
 ```
-### 📊 各消息队列配置示例
+### 4.各消息队列配置示例📊 
 #### 1.Kafka 配置 🔥
 ```
 builder.Services.EasyCoreEventBus(options =>
@@ -257,7 +257,7 @@ builder.Services.EasyCoreEventBus(options =>
     options.RedisStreams(new List<string> { "localhost:6379" });
 });
 ```
-### 🎮 使用示例
+### 5.使用示例🎮 
 #### 发布事件
 ```
 [Route("api/[controller]")]
@@ -337,7 +337,7 @@ public class MonitoringEventHandler : IDistributedEventHandler<WebEventMessage>
 | 🔧 可扩展   | 插件化架构 | 易于扩展新的消息队列支持                           |
 
 
-#### 📝 总结
+###  6.总结📝
 EasyCore.EventBus 为 .NET Core 应用程序提供了一个功能丰富、易于使用的事件总线解决方案。无论是单体应用中的模块解耦，还是微服务架构中的跨服务通信，都能通过统一的 API 轻松实现。其强大的失败重试机制和多消息队列支持，让开发者可以专注于业务逻辑，而不用关心底层通信细节。
 
 开始使用 EasyCore.EventBus，构建更加松耦合、可扩展的 .NET Core 应用程序！🎉

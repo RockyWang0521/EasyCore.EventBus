@@ -1,9 +1,9 @@
 ﻿namespace EasyCore.EventBus.Event
 {
     /// <summary>
-    /// Distributed Event Handling Interface Definition
+    /// Marker interface for handlers that process distributed (cross-process) events.
     /// </summary>
-    /// <typeparam name="TEvent">Event Object</typeparam>
+    /// <typeparam name="TEvent">The event type to handle, which must implement <see cref="IEvent"/>.</typeparam>
     public interface IDistributedEventHandler<TEvent> : IEventHandler<TEvent> where TEvent : IEvent
     {
 

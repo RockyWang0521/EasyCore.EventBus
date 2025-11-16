@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using EasyCore.EventBus;
 using EasyCore.EventBus.RabbitMQ;
-using Newtonsoft.Json;
 
 namespace WinFormsAppDistributed
 {

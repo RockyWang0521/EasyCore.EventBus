@@ -2,30 +2,18 @@
 {
     public static class EventBusRedisStreamsExtensions
     {
-        public static EventBusOptions RedisStreams(this EventBusOptions options, List<string> EndPoints)
+        public static EventBusOptions RedisStreams(this EventBusOptions options, List<string> endPoints)
         {
-            if (EndPoints.Count <= 0) throw new ArgumentException(nameof(EndPoints));
+            if (endPoints == null || endPoints.Count == 0)
+                throw new ArgumentException("At least one endpoint is required.", nameof(endPoints));
 
-            var configure = new Action<RedisStreamsOptions>(options =>
-            {
-                options.EndPoints = EndPoints;
-            });
-
-            options.RegisterExtension(new RedisStreamsOptionsExtension(configure));
-
-            return options;
+            return options.RedisStreams(opt => opt.EndPoints = endPoints);
         }
 
         public static EventBusOptions RedisStreams(this EventBusOptions options, Action<RedisStreamsOptions> configure)
         {
-            if (configure == null) throw new ArgumentNullException(nameof(configure));
-
-            var rabbitMQOptions = new RedisStreamsOptions();
-
-            configure.Invoke(rabbitMQOptions);
-
+            ArgumentNullException.ThrowIfNull(configure);
             options.RegisterExtension(new RedisStreamsOptionsExtension(configure));
-
             return options;
         }
     }

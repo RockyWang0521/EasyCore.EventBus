@@ -3,97 +3,55 @@ using EasyCore.EventBus.Event;
 using EasyCore.EventBus.HostedService;
 using EasyCore.EventBus.Local;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace EasyCore.EventBus
 {
+    /// <summary>
+    /// DI entry point for EasyCore EventBus registration and configuration.
+    /// </summary>
     public static class EasyCoreEventExtend
     {
-        public static void EasyCoreEventBus(this IServiceCollection service, Action<EventBusOptions>? action = null)
+        /// <summary>
+        /// Registers the local event bus and, when configured, distributed transports and handlers.
+        /// </summary>
+        /// <param name="services">The service collection to configure.</param>
+        /// <param name="action">
+        /// Optional configuration for distributed EventBus options and transport extensions.
+        /// When provided, registers <see cref="IDistributedEventBus"/> and related hosted services.
+        /// </param>
+        /// <returns>The same <paramref name="services"/> instance for chaining.</returns>
+        public static IServiceCollection EasyCoreEventBus(this IServiceCollection services, Action<EventBusOptions>? action = null)
         {
-            service.AddSingleton<ILocalEventBus, LocalEventBus>();
+            services.TryAddSingleton<ILocalEventBus, LocalEventBus>();
+            services.TryAddSingleton<DistributedEventDispatcher>();
 
             if (action != null)
             {
-                service.AddSingleton<IDistributedEventBus, DistributedEventBus>();
-
-                service.AddOptions();
+                services.TryAddSingleton<IDistributedEventBus, DistributedEventBus>();
+                services.AddOptions();
 
                 var options = new EventBusOptions();
-
                 action(options);
 
-                if (options.Extensions != null)
-                {
-                    foreach (var serviceExtension in options.Extensions!)
-                        serviceExtension.AddServices(service);
+                foreach (var serviceExtension in options.Extensions)
+                    serviceExtension.AddServices(services);
 
-                    service.AddHostedService<EventBusHostedService>();
-                }
+                if (options.Extensions.Count > 0)
+                    services.AddHostedService<EventBusHostedService>();
 
-                service.Configure(action);
+                services.Configure(action);
             }
 
-            string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var (localHandlers, distributedHandlers) = EventTypeScanner.GetHandlerRegistrations();
 
-            string[] dllFiles = Directory.GetFiles(rootDirectory, "*.dll", SearchOption.TopDirectoryOnly).Where(path =>
-            {
-                string fileName = Path.GetFileName(path);
-                return !(fileName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("System.", StringComparison.OrdinalIgnoreCase));
-            }).ToArray();
+            foreach (var (service, implementation) in localHandlers)
+                services.AddTransient(service, implementation);
 
-            var eventtype = typeof(IEvent);
+            foreach (var (service, implementation) in distributedHandlers)
+                services.AddTransient(service, implementation);
 
-            List<Type> eventHandlerLocalTypes = new List<Type>();
-
-            List<Type> eventHandlerDistributedTypes = new List<Type>();
-
-            foreach (var dll in dllFiles)
-            {
-                Assembly assembly = Assembly.LoadFrom(dll);
-
-                var events = assembly.GetTypes()
-                                             .Where(type => eventtype.IsAssignableFrom(type))
-                                             .Where(type => !type.IsInterface)
-                                             .Where(type => !type.IsAbstract);
-
-                if (events.Count() <= 0) continue;
-
-                foreach (var eventType in events)
-                {
-                    var handlerLocalType = typeof(ILocalEventHandler<>).MakeGenericType(eventType);
-
-                    var handlerDistributedType = typeof(IDistributedEventHandler<>).MakeGenericType(eventType);
-
-                    if (!eventHandlerLocalTypes.Contains(handlerLocalType)) eventHandlerLocalTypes.Add(handlerLocalType);
-
-                    if (!eventHandlerDistributedTypes.Contains(handlerDistributedType)) eventHandlerDistributedTypes.Add(handlerDistributedType);
-                }
-
-            }
-
-            if (eventHandlerLocalTypes.Count <= 0 && eventHandlerDistributedTypes.Count <= 0) return;
-
-            foreach (var dll in dllFiles)
-            {
-                Assembly assembly = Assembly.LoadFrom(dll);
-
-                foreach (var handlerType in eventHandlerLocalTypes)
-                {
-                    var handlers = assembly.GetTypes().Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-                    foreach (var handler in handlers)
-                        service.AddTransient(handlerType, handler);
-                }
-
-                foreach (var handlerType in eventHandlerDistributedTypes)
-                {
-                    var handlers = assembly.GetTypes().Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-                    foreach (var handler in handlers)
-                        service.AddTransient(handlerType, handler);
-                }
-            }
+            return services;
         }
     }
 }
-
-

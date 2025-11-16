@@ -1,22 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
     <PackageReadmeFile>README.en-US.md</PackageReadmeFile>
     <IncludeSymbols>False</IncludeSymbols>
     <RepositoryType>gitee</RepositoryType>
     <Authors>WZHY</Authors>
-    <Description>.Net Core EventBus，Local event bus。</Description>
+    <Description>.NET Core EventBus — local and distributed event bus abstractions.</Description>
     <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+    <PackageTags>easycore;eventbus;messaging;eda</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
     <Version>8.0.1</Version>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +36,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

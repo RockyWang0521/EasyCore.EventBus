@@ -1,7 +1,7 @@
 ﻿namespace EasyCore.EventBus.Event
 {
     /// <summary>
-    /// Event Definition Base Interface
+    /// Marker interface that all event message types must implement.
     /// </summary>
     public interface IEvent
     {

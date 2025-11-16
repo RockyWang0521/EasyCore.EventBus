@@ -2,30 +2,18 @@
 {
     public static class EventBusPulsarExtensions
     {
-        public static EventBusOptions Pulsar(this EventBusOptions options, string ServiceUrl)
+        public static EventBusOptions Pulsar(this EventBusOptions options, string serviceUrl)
         {
-            if (string.IsNullOrEmpty(ServiceUrl)) throw new ArgumentException(nameof(ServiceUrl));
+            if (string.IsNullOrEmpty(serviceUrl))
+                throw new ArgumentException("Service URL is required.", nameof(serviceUrl));
 
-            var configure = new Action<PulsarOptions>(options =>
-            {
-                options.ServiceUrl = ServiceUrl;
-            });
-
-            options.RegisterExtension(new PulsarOptionsExtension(configure));
-
-            return options;
+            return options.Pulsar(opt => opt.ServiceUrl = serviceUrl);
         }
 
         public static EventBusOptions Pulsar(this EventBusOptions options, Action<PulsarOptions> configure)
         {
-            if (configure == null) throw new ArgumentNullException(nameof(configure));
-
-            var pulsarOptions = new PulsarOptions();
-
-            configure.Invoke(pulsarOptions);
-
+            ArgumentNullException.ThrowIfNull(configure);
             options.RegisterExtension(new PulsarOptionsExtension(configure));
-
             return options;
         }
     }

@@ -1,21 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>WZHY</Authors>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
     <PackageReadmeFile>README.en-US.md</PackageReadmeFile>
     <RepositoryType>gitee</RepositoryType>
     <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
-    <Description>.Net Core EventBus，Distributed Event Bus，Based on RedisStreams。</Description>
+    <Description>.NET Core EventBus distributed transport based on Redis Streams.</Description>
     <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+    <PackageTags>easycore;eventbus;redis;streams</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
     <Version>8.0.1</Version>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,12 +31,10 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EasyCore.EventBus\EasyCore.EventBus.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
+    <ProjectReference Include="..\EasyCore.EventBus\EasyCore.EventBus.csproj" />
+    <ProjectReference Include="..\EasyCore.RedisStreams\EasyCore.RedisStreams.csproj" />
   </ItemGroup>
 
 </Project>

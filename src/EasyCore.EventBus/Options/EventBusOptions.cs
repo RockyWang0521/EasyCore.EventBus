@@ -3,42 +3,50 @@
 namespace EasyCore.EventBus
 {
     /// <summary>
-    /// EventBus Options
+    /// EventBus options shared across local and distributed transports.
     /// </summary>
     public class EventBusOptions
     {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        /// <summary>
+        /// Initializes a new instance of <see cref="EventBusOptions"/> with an empty extension list.
+        /// </summary>
         public EventBusOptions()
         {
             Extensions = new List<IEventOptionsExtension>();
         }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <summary>
-        /// Failure retry count
+        /// Failure retry count (additional attempts after the first try).
         /// </summary>
         public int RetryCount { get; set; } = 3;
 
         /// <summary>
-        /// Failure retry interval (seconds)
+        /// Failure retry interval in seconds.
         /// </summary>
         public int RetryInterval { get; set; } = 3;
 
         /// <summary>
-        /// Failure callback function
+        /// Invoked when retries are exhausted.
         /// </summary>
+        /// <remarks>
+        /// The first argument is the event type name; the second is the optional payload (e.g. JSON).
+        /// </remarks>
         public Action<string, string?>? FailureCallback { get; set; }
 
         /// <summary>
-        /// Interface for event options extensions.
+        /// Registered transport extensions applied during DI setup.
         /// </summary>
-        internal IList<IEventOptionsExtension>? Extensions { get; }
+        internal IList<IEventOptionsExtension> Extensions { get; }
 
-#pragma warning disable CS8602 // Converting null literal or possible null value to non-nullable type.
+        /// <summary>
+        /// Registers a transport extension.
+        /// </summary>
+        /// <param name="extension">The extension that adds transport-specific services.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="extension"/> is <c>null</c>.</exception>
         public void RegisterExtension(IEventOptionsExtension extension)
         {
+            ArgumentNullException.ThrowIfNull(extension);
             Extensions.Add(extension);
         }
-#pragma warning restore CS8602 // Converting null literal or possible null value to non-nullable type.
     }
 }

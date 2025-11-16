@@ -1,10 +1,10 @@
 ﻿namespace EasyCore.EventBus.Event
 {
     /// <summary>
-    /// Local Event Handling Interface Definition
+    /// Marker interface for handlers that process local (in-process) events.
     /// </summary>
-    /// <typeparam name="TEvent"></typeparam>
-    public interface ILocalEventHandler<TEvent>  : IEventHandler<TEvent> where TEvent : IEvent
+    /// <typeparam name="TEvent">The event type to handle, which must implement <see cref="IEvent"/>.</typeparam>
+    public interface ILocalEventHandler<TEvent> : IEventHandler<TEvent> where TEvent : IEvent
     {
 
     }

@@ -7,7 +7,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>WZHY</Authors>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.en-US.md</PackageReadmeFile>
     <RepositoryType>gitee</RepositoryType>
     <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
     <Description>.Net Core EventBus，Distributed Event Bus，Based on Pulsar。</Description>
@@ -20,6 +20,10 @@
 
   <ItemGroup>
     <None Include="..\..\png\EasyCoreLogo.png" Link="EasyCoreLogo.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+    <None Include="..\..\README.en-US.md" Link="README.en-US.md">
       <PackagePath>\</PackagePath>
       <Pack>True</Pack>
     </None>

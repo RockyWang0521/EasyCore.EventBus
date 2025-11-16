@@ -1,6 +1,6 @@
 # EasyCore.EventBus - .NET Core Event Bus Solution 🚀
 
-[中文 README](./README.md)
+[中文 README](https://gitee.com/wzhy-0521/easy-core.-event-bus/blob/master/README.md)
 
 ## 📋 Project Introduction
 

@@ -1,4 +1,7 @@
 # EasyCore.EventBus - .NET Core Event Bus Solution 🚀
+
+[中文 README](./README.md)
+
 ## 📋 Project Introduction
 
 EasyCore.EventBus is a lightweight event bus library designed specifically for .NET Core, helping developers easily implement Event-Driven Architecture (EDA). This library supports multiple message queues as event transmission media and provides a unified event publish-subscribe interface, making asynchronous communication between different components, modules, or services simpler.

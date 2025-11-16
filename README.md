@@ -1,5 +1,7 @@
 # EasyCore.EventBus - .NET Core 事件总线解决方案 🚀
 
+[English README](./README.en.md)
+
 ## 📋 项目介绍
 
 EasyCore.EventBus 是一个专为 .NET Core 设计的轻量级事件总线库，帮助开发者轻松实现事件驱动架构（EDA）。该库支持多种消息队列作为事件传输媒介，提供了统一的事件发布-订阅接口，让不同组件、模块或服务之间的异步通信变得更加简单。

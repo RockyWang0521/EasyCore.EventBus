@@ -1,6 +1,6 @@
 # EasyCore.EventBus - .NET Core 事件总线解决方案 🚀
 
-[English README](github.com/RockyWang0521/EasyCore.EventBus/blob/master//README.en-US.md)
+[English README](github.com/RockyWang0521/EasyCore.EventBus/blob/master//README.en-US.md)](https://github.com/RockyWang0521/EasyCore.EventBus/blob/master/README.en-US.md)
 
 ## 📋 项目介绍
 

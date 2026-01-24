@@ -11,6 +11,11 @@ namespace EasyCore.EventBus.HostedService
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             _MessageQueueClient.Connect();
 
             _MessageQueueClient.Subscribe();

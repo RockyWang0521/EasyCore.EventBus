@@ -42,58 +42,79 @@ namespace EasyCore.EventBus
                 return !(fileName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase) || fileName.StartsWith("System.", StringComparison.OrdinalIgnoreCase));
             }).ToArray();
 
-            var eventtype = typeof(IEvent);
+            var eventType = typeof(IEvent);
 
-            List<Type> eventHandlerLocalTypes = new List<Type>();
+            HashSet<Type> eventHandlerLocalTypes = new HashSet<Type>();
 
-            List<Type> eventHandlerDistributedTypes = new List<Type>();
+            HashSet<Type> eventHandlerDistributedTypes = new HashSet<Type>();
+
+            List<Assembly> assemblies = new List<Assembly>();
 
             foreach (var dll in dllFiles)
             {
-                Assembly assembly = Assembly.LoadFrom(dll);
-
-                var events = assembly.GetTypes()
-                                             .Where(type => eventtype.IsAssignableFrom(type))
-                                             .Where(type => !type.IsInterface)
-                                             .Where(type => !type.IsAbstract);
-
-                if (events.Count() <= 0) continue;
-
-                foreach (var eventType in events)
+                try
                 {
-                    var handlerLocalType = typeof(ILocalEventHandler<>).MakeGenericType(eventType);
+                    assemblies.Add(Assembly.LoadFrom(dll));
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
 
-                    var handlerDistributedType = typeof(IDistributedEventHandler<>).MakeGenericType(eventType);
+            foreach (var assembly in assemblies)
+            {
+                var events = GetLoadableTypes(assembly)
+                             .Where(type => eventType.IsAssignableFrom(type))
+                             .Where(type => !type.IsInterface)
+                             .Where(type => !type.IsAbstract);
 
-                    if (!eventHandlerLocalTypes.Contains(handlerLocalType)) eventHandlerLocalTypes.Add(handlerLocalType);
+                if (!events.Any()) continue;
 
-                    if (!eventHandlerDistributedTypes.Contains(handlerDistributedType)) eventHandlerDistributedTypes.Add(handlerDistributedType);
+                foreach (var eventItem in events)
+                {
+                    var handlerLocalType = typeof(ILocalEventHandler<>).MakeGenericType(eventItem);
+
+                    var handlerDistributedType = typeof(IDistributedEventHandler<>).MakeGenericType(eventItem);
+
+                    eventHandlerLocalTypes.Add(handlerLocalType);
+
+                    eventHandlerDistributedTypes.Add(handlerDistributedType);
                 }
 
             }
 
             if (eventHandlerLocalTypes.Count <= 0 && eventHandlerDistributedTypes.Count <= 0) return;
 
-            foreach (var dll in dllFiles)
+            foreach (var assembly in assemblies)
             {
-                Assembly assembly = Assembly.LoadFrom(dll);
-
                 foreach (var handlerType in eventHandlerLocalTypes)
                 {
-                    var handlers = assembly.GetTypes().Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+                    var handlers = GetLoadableTypes(assembly).Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
                     foreach (var handler in handlers)
                         service.AddTransient(handlerType, handler);
                 }
 
                 foreach (var handlerType in eventHandlerDistributedTypes)
                 {
-                    var handlers = assembly.GetTypes().Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+                    var handlers = GetLoadableTypes(assembly).Where(t => handlerType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
                     foreach (var handler in handlers)
                         service.AddTransient(handlerType, handler);
                 }
             }
         }
+
+        private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                return ex.Types.Where(type => type != null)!;
+            }
+        }
     }
 }
-
 

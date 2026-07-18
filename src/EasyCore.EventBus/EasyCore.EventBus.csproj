@@ -7,11 +7,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
-    <PackageReadmeFile>README.en-US.md</PackageReadmeFile>
+    <PackageReadmeFile>README.en.md</PackageReadmeFile>
     <IncludeSymbols>False</IncludeSymbols>
     <RepositoryType>gitee</RepositoryType>
     <Authors>WZHY</Authors>
-    <Description>.NET Core EventBus — local and distributed event bus abstractions.</Description>
+    <Description>.NET Core EventBus - local and distributed event bus abstractions.</Description>
     <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
@@ -27,7 +27,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\README.en-US.md">
+    <None Include="..\..\README.en.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

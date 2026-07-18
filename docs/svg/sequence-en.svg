@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="380" viewBox="0 0 980 380">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1419"/>
+      <stop offset="100%" stop-color="#1a2332"/>
+    </linearGradient>
+  </defs>
+  <rect width="980" height="380" rx="16" fill="url(#bg)"/>
+  <text x="40" y="40" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="20" font-weight="700">Distributed Event Lifecycle</text>
+  <text x="40" y="64" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Publish ’ Broker ’ Subscribe ’ Dispatch (multi-handler) ’ Retry ’ Ack</text>
+
+  <rect x="40" y="100" width="150" height="70" rx="10" fill="#243044" stroke="#3d9cf0" stroke-width="2"/>
+  <text x="115" y="130" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13" font-weight="700">1. Publish</text>
+  <text x="115" y="152" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="11">IDistributedEventBus</text>
+
+  <rect x="230" y="100" width="150" height="70" rx="10" fill="#243044" stroke="#f0b429" stroke-width="2"/>
+  <text x="305" y="130" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13" font-weight="700">2. Broker</text>
+  <text x="305" y="152" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="11">JSON + x-retry headers</text>
+
+  <rect x="420" y="100" width="150" height="70" rx="10" fill="#243044" stroke="#3ecf8e" stroke-width="2"/>
+  <text x="495" y="130" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13" font-weight="700">3. Consume</text>
+  <text x="495" y="152" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="11">HostedService</text>
+
+  <rect x="610" y="100" width="150" height="70" rx="10" fill="#243044" stroke="#c084fc" stroke-width="2"/>
+  <text x="685" y="130" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13" font-weight="700">4. Dispatch</text>
+  <text x="685" y="152" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="11">Multi-handler fan-out</text>
+
+  <rect x="800" y="100" width="140" height="70" rx="10" fill="#243044" stroke="#ef4444" stroke-width="2"/>
+  <text x="870" y="130" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13" font-weight="700">5. Ack</text>
+  <text x="870" y="152" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="11">Success / Exhausted</text>
+
+  <text x="40" y="220" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="14" font-weight="700">Retry on failure</text>
+  <rect x="40" y="240" width="900" height="100" rx="12" fill="#1a2332" stroke="#2f3f55"/>
+  <text x="60" y="275" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Handler throws ’ DistributedEventDispatcher retries using x-retry / RetryCount</text>
+  <text x="60" y="300" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Delay = x-retry-time / RetryInterval (seconds) ’ FailureCallback ’ Ack/Commit (avoid poison loops)</text>
+  <text x="60" y="325" fill="#6b7c93" font-family="Segoe UI, Arial" font-size="12">Configure: EventBusOptions.RetryCount / RetryInterval / FailureCallback</text>
+</svg>

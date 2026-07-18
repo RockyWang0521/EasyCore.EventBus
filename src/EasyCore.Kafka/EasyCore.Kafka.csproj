@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -8,6 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>WZHY</Authors>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
+    <PackageReadmeFile>README.en.md</PackageReadmeFile>
     <RepositoryType>gitee</RepositoryType>
     <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
     <Description>.NET Core Kafka client wrapper with publish/subscribe helpers.</Description>
@@ -22,6 +23,10 @@
 
   <ItemGroup>
     <None Include="..\..\png\EasyCoreLogo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="README.en.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

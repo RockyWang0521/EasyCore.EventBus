@@ -14,11 +14,11 @@
     <Description>.NET Core EventBus - local and distributed event bus abstractions.</Description>
     <PackageProjectUrl>https://github.com/RockyWang0521/EasyCore.EventBus</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>easycore;eventbus;messaging;eda</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
-    <Version>8.0.2</Version>
+    <Version>8.3.0</Version>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 

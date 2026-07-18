@@ -13,11 +13,11 @@
     <RepositoryUrl>https://github.com/RockyWang0521/EasyCore.EventBus</RepositoryUrl>
     <Description>.NET Core RabbitMQ client wrapper with publish/subscribe helpers.</Description>
     <PackageProjectUrl>https://github.com/RockyWang0521/EasyCore.EventBus</PackageProjectUrl>
-    <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>easycore;rabbitmq;amqp;messaging</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
-    <Version>8.0.0</Version>
+    <Version>8.3.0</Version>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 

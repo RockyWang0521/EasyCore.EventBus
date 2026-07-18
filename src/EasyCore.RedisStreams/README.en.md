@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Redis](https://img.shields.io/badge/StackExchange.Redis-2.8-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -106,7 +106,7 @@ dotnet add package EasyCore.RedisStreams
 ```csharp
 using EasyCore.RedisStreams;
 
-builder.Services.EasyCoreRedisStreams(o =>
+builder.Services.AddEasyCoreRedisStreams(o =>
 {
     o.EndPoints = new List<string> { "localhost:6379" };
     o.User = null;           // ACL user (optional)
@@ -205,7 +205,7 @@ When `header` is `null`, publish writes a default header.
 
 | Member | Description |
 |---|---|
-| `EasyCoreRedisStreams(Action<RedisStreamsOptions>)` | DI: Options and `IRedisStreamsClient` |
+| `AddEasyCoreRedisStreams(Action<RedisStreamsOptions>)` | DI: Options and `IRedisStreamsClient` |
 | `ConnectAsync` | Connect to Redis and prepare the consumer group name |
 | `PublishAsync(streamKey, typeName, payloadJson, header?)` | `XADD` with unified fields |
 | `SubscribeAsync(streamKeys, handler)` | Consumer-group consume loop |
@@ -254,7 +254,7 @@ A: Put endpoints in `EndPoints` with credentials as needed; advanced topologies 
 
 ## 10. 📄 License
 
-MIT OR Apache-2.0 — see the repository [LICENSE](../../LICENSE) if present, or the NuGet package metadata.
+MIT — see the repository [LICENSE](../../LICENSE), or the NuGet package metadata.
 
 ---
 

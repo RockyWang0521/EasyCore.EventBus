@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ.Client-6.8-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -103,7 +103,7 @@ dotnet add package EasyCore.RabbitMQ
 ```csharp
 using EasyCore.RabbitMQ;
 
-builder.Services.EasyCoreRabbitMQ(o =>
+builder.Services.AddEasyCoreRabbitMQ(o =>
 {
     o.HostName = "localhost";
     o.UserName = "guest";
@@ -186,7 +186,7 @@ public sealed class OrderConsumer : BackgroundService
 
 | Member | Description |
 |---|---|
-| `EasyCoreRabbitMQ(Action<RabbitMQOptions>)` | DI: Options, connection factory, `IRabbitMQClient` |
+| `AddEasyCoreRabbitMQ(Action<RabbitMQOptions>)` | DI: Options, connection factory, `IRabbitMQClient` |
 | `ConnectAsync` | Connect and declare the configured exchange |
 | `PublishAsync(routingKey, body, headers?)` | Publish to the exchange (with confirms) |
 | `SubscribeAsync(routingKeys, handler)` | Declare queue, bind keys, start consuming |
@@ -240,7 +240,7 @@ A: Pass comma-separated hosts in `HostName`; failover follows RabbitMQ.Client be
 
 ## 9. 📄 License
 
-MIT OR Apache-2.0 — see the repository [LICENSE](../../LICENSE) if present, or the NuGet package metadata.
+MIT — see the repository [LICENSE](../../LICENSE), or the NuGet package metadata.
 
 ---
 

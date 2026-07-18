@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Pulsar](https://img.shields.io/badge/Pulsar.Client-3.12-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -104,7 +104,7 @@ dotnet add package EasyCore.Pulsar
 ```csharp
 using EasyCore.Pulsar;
 
-builder.Services.EasyCorePulsar(o =>
+builder.Services.AddEasyCorePulsar(o =>
 {
     o.ServiceUrl = "pulsar://localhost:6650";
     o.TopicPrefix = "persistent://public/default/";
@@ -179,7 +179,7 @@ public sealed class InvoiceConsumer : BackgroundService
 
 | Member | Description |
 |---|---|
-| `EasyCorePulsar(Action<PulsarOptions>)` | DI: Options and `IPulsarClient` |
+| `AddEasyCorePulsar(Action<PulsarOptions>)` | DI: Options and `IPulsarClient` |
 | `ConnectAsync` | Connect to ServiceUrl and build the native client |
 | `PublishAsync(topic, body, properties?)` | Publish; relative topics get `TopicPrefix` |
 | `SubscribeAsync(topics, handler)` | Subscribe and start a background consume loop |
@@ -226,7 +226,7 @@ A: Set `UseTls = true` and configure certificates, hostname verification, and `A
 
 ## 9. 📄 License
 
-MIT OR Apache-2.0 — see the repository [LICENSE](../../LICENSE) if present, or the NuGet package metadata.
+MIT — see the repository [LICENSE](../../LICENSE), or the NuGet package metadata.
 
 ---
 

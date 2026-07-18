@@ -8,7 +8,7 @@ namespace EasyCore.RedisStreams
     /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection EasyCoreRedisStreams(this IServiceCollection services, Action<RedisStreamsOptions> configure)
+        public static IServiceCollection AddEasyCoreRedisStreams(this IServiceCollection services, Action<RedisStreamsOptions> configure)
         {
             ArgumentNullException.ThrowIfNull(configure);
             services.Configure(configure);

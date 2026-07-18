@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Kafka](https://img.shields.io/badge/Confluent.Kafka-2.12-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -103,7 +103,7 @@ dotnet add package EasyCore.Kafka
 ```csharp
 using EasyCore.Kafka;
 
-builder.Services.EasyCoreKafka(o =>
+builder.Services.AddEasyCoreKafka(o =>
 {
     o.BootstrapServers = "localhost:9092";
     o.TopicName = "EasyCore.Topic";
@@ -180,7 +180,7 @@ public sealed class TelemetryConsumer : BackgroundService
 
 | 成员 | 说明 |
 |---|---|
-| `EasyCoreKafka(Action<KafkaOptions>)` | DI 扩展：注册 Options 与 `IKafkaClient` |
+| `AddEasyCoreKafka(Action<KafkaOptions>)` | DI 扩展：注册 Options 与 `IKafkaClient` |
 | `ConnectAsync` | 初始化 Consumer（幂等） |
 | `PublishAsync(topic, body, key?, headers?)` | 向指定 Topic 生产消息 |
 | `SubscribeAsync(topics, handler)` | 订阅多个 Topic 并启动后台消费循环 |
@@ -222,7 +222,7 @@ A: 支持，在 `BootstrapServers` 中用逗号分隔，例如 `kafka1:9092,kafk
 
 ## 9. 📄 License
 
-MIT OR Apache-2.0 — 详见仓库根目录 [LICENSE](../../LICENSE)（若存在）或 NuGet 包元数据。
+MIT — 详见仓库根目录 [LICENSE](../../LICENSE) 或 NuGet 包元数据。
 
 ---
 

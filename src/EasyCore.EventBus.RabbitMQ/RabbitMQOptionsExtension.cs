@@ -27,7 +27,7 @@ namespace EasyCore.EventBus.RabbitMQ
         /// <param name="services">The service collection to configure.</param>
         public void AddServices(IServiceCollection services)
         {
-            services.EasyCoreRabbitMQ(_configure);
+            services.AddEasyCoreRabbitMQ(_configure);
             services.TryAddSingleton<IEventMessageQueueClient, EventRabbitMQClient>();
         }
     }

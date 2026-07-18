@@ -10,7 +10,7 @@ namespace EasyCore.EventBus.Tests
         {
             var services = new ServiceCollection();
             services.AddLogging();
-            services.EasyCoreEventBus();
+            services.AddEasyCoreEventBus();
 
             var provider = services.BuildServiceProvider();
             var localHandlers = provider.GetServices<ILocalEventHandler<SampleEvent>>().ToList();

@@ -1,4 +1,4 @@
-﻿using EasyCore.EventBus.Distributed;
+using EasyCore.EventBus.Distributed;
 using EasyCore.EventBus.Event;
 using EasyCore.EventBus.HostedService;
 using EasyCore.EventBus.Local;
@@ -21,7 +21,7 @@ namespace EasyCore.EventBus
         /// When provided, registers <see cref="IDistributedEventBus"/> and related hosted services.
         /// </param>
         /// <returns>The same <paramref name="services"/> instance for chaining.</returns>
-        public static IServiceCollection EasyCoreEventBus(this IServiceCollection services, Action<EventBusOptions>? action = null)
+        public static IServiceCollection AddEasyCoreEventBus(this IServiceCollection services, Action<EventBusOptions>? action = null)
         {
             services.TryAddSingleton<ILocalEventBus, LocalEventBus>();
             services.TryAddSingleton<DistributedEventDispatcher>();

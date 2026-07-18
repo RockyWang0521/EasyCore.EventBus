@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var kafka = builder.Configuration.GetSection("Kafka");
-builder.Services.EasyCoreKafka(o =>
+builder.Services.AddEasyCoreKafka(o =>
 {
     o.BootstrapServers = kafka["BootstrapServers"] ?? "localhost:9092";
     o.GroupId = kafka["GroupId"] ?? "Infra.GroupId";

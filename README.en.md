@@ -9,8 +9,8 @@
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Transports](https://img.shields.io/badge/MQ-RabbitMQ%20%7C%20Kafka%20%7C%20Pulsar%20%7C%20Redis-orange)
-![License](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 Repository: [github.com/RockyWang0521/EasyCore.EventBus](https://github.com/RockyWang0521/EasyCore.EventBus)
 
@@ -67,7 +67,7 @@ EasyCore.EventBus solves “one API for in-process decoupling and cross-service 
 
 | Principle | Meaning |
 |---|---|
-| **Low friction** | One call: `services.EasyCoreEventBus(...)` |
+| **Low friction** | One call: `services.AddEasyCoreEventBus(...)` |
 | **Local-first** | Without `action`, only `ILocalEventBus` is registered |
 | **Pluggable transports** | Separate adapters for RabbitMQ / Kafka / Pulsar / Redis Streams |
 | **Failure-aware** | Exhausted retries invoke `FailureCallback` and log |
@@ -172,7 +172,7 @@ Three layers:
 
 ```text
 Need cross-process / cross-service?
-├── No  → services.EasyCoreEventBus() + ILocalEventBus only
+├── No  → services.AddEasyCoreEventBus() + ILocalEventBus only
 └── Yes → pick your broker
         ├── RabbitMQ        → EasyCore.EventBus.RabbitMQ
         ├── Apache Kafka    → EasyCore.EventBus.Kafka
@@ -245,7 +245,7 @@ using EasyCore.EventBus;
 using EasyCore.EventBus.Local;
 
 // Local only: omit the options action
-services.EasyCoreEventBus();
+services.AddEasyCoreEventBus();
 
 public class OrderService(ILocalEventBus localEventBus)
 {
@@ -265,7 +265,7 @@ using EasyCore.EventBus.RabbitMQ;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.EasyCoreEventBus(options =>
+builder.Services.AddEasyCoreEventBus(options =>
 {
     options.RabbitMQ(opt =>
     {
@@ -470,10 +470,10 @@ Tips:
 ## 13. ❓ FAQ
 
 **Q: Is the entry point `AddAppEventBus`?**  
-A: No. Use `services.EasyCoreEventBus(options => { ... })`.
+A: No. Use `services.AddEasyCoreEventBus(options => { ... })`.
 
 **Q: Do I need a RabbitMQ package for local events only?**  
-A: No. Reference `EasyCore.EventBus` and call `services.EasyCoreEventBus()`.
+A: No. Reference `EasyCore.EventBus` and call `services.AddEasyCoreEventBus()`.
 
 **Q: Must I register handlers with `AddTransient`?**  
 A: Usually not. Implement `ILocalEventHandler<T>` / `IDistributedEventHandler<T>`; `EventTypeScanner` registers them during setup.
@@ -494,7 +494,7 @@ A: `EasyCore.EventBus.*` targets the event-bus scenario; `EasyCore.RabbitMQ` (et
 
 ## 14. 📄 License
 
-**MIT OR Apache-2.0** — see [LICENSE](LICENSE) and each package’s `PackageLicenseExpression`.
+**MIT** — see [LICENSE](LICENSE) and each package's `PackageLicenseExpression`.
 
 You may use this software under either the MIT or the Apache-2.0 license.
 

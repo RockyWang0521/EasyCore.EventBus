@@ -51,7 +51,7 @@ public static IHostBuilder CreateHostBuilder() =>
             services.AddSingleton<Main>();
             
             // 🎯 Register EventBus Service
-            services.AddAppEventBus(options =>
+            services.AddEasyCoreEventBus(options =>
             {
                 options.RabbitMQ(opt =>
                 {
@@ -76,7 +76,7 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         // 🎯 Register EventBus Service
-        builder.Services.AddAppEventBus(options =>
+        builder.Services.AddEasyCoreEventBus(options =>
         {
             options.RabbitMQ(opt =>
             {
@@ -180,7 +180,7 @@ public class MyDistributedEventHandler : IDistributedEventHandler<DistributedEve
 
 Retry Mechanism 🔄 Sender Configuration
 ```
-services.EasyCoreEventBus(options =>
+services.AddEasyCoreEventBus(options =>
 {
     options.RabbitMQ(opt =>
     {
@@ -197,7 +197,7 @@ services.EasyCoreEventBus(options =>
 ```
 #### Receiver Configuration
 ```
-services.EasyCoreEventBus(options =>
+services.AddEasyCoreEventBus(options =>
 {
     options.RabbitMQ(opt =>
     {
@@ -220,28 +220,28 @@ services.EasyCoreEventBus(options =>
 ### 4. Message Queue Configuration Examples📊
 #### 1. Kafka Configuration 🔥
 ```
-builder.Services.EasyCoreEventBus(options =>
+builder.Services.AddEasyCoreEventBus(options =>
 {
     options.Kafka("localhost:9092");
 });
 ```
 #### 2. Pulsar Configuration ⚡
 ```
-builder.Services.EasyCoreEventBus(options =>
+builder.Services.AddEasyCoreEventBus(options =>
 {
     options.Pulsar("pulsar://localhost:6650");
 });
 ```
 #### 3. RabbitMQ Configuration 🐇
 ```
-builder.Services.EasyCoreEventBus(options =>
+builder.Services.AddEasyCoreEventBus(options =>
 {
     options.RabbitMQ("localhost");
 });
 ```
 #### 4. Redis Streams Configuration 🔴
 ```
-builder.Services.EasyCoreEventBus(options =>
+builder.Services.AddEasyCoreEventBus(options =>
 {
     options.RedisStreams(new List<string> { "localhost:6379" });
 });

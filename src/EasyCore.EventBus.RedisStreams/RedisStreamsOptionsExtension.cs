@@ -13,7 +13,7 @@ namespace EasyCore.EventBus.RedisStreams
 
         public void AddServices(IServiceCollection services)
         {
-            services.EasyCoreRedisStreams(_configure);
+            services.AddEasyCoreRedisStreams(_configure);
             services.TryAddSingleton<IEventMessageQueueClient, EventRedisStreamsClient>();
         }
     }

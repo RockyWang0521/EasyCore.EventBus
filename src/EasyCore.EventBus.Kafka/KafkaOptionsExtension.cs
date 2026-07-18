@@ -13,7 +13,7 @@ namespace EasyCore.EventBus.Kafka
 
         public void AddServices(IServiceCollection services)
         {
-            services.EasyCoreKafka(_configure);
+            services.AddEasyCoreKafka(_configure);
             services.TryAddSingleton<IEventMessageQueueClient, EventKafkaClient>();
         }
     }

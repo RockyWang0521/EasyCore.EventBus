@@ -13,7 +13,7 @@ namespace WebApplicationDistributed
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.EasyCoreEventBus(options =>
+            builder.Services.AddEasyCoreEventBus(options =>
             {
                 options.RabbitMQ(opt =>
                 {

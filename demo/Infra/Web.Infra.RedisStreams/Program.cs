@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var redis = builder.Configuration.GetSection("RedisStreams");
-builder.Services.EasyCoreRedisStreams(o =>
+builder.Services.AddEasyCoreRedisStreams(o =>
 {
     o.EndPoints = redis.GetSection("EndPoints").Get<List<string>>() ?? new List<string> { "localhost:6379" };
     o.Password = redis["Password"];

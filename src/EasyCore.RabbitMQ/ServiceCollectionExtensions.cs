@@ -14,7 +14,7 @@ namespace EasyCore.RabbitMQ
         /// <param name="services">The service collection to add services to.</param>
         /// <param name="configure">Callback used to configure <see cref="RabbitMQOptions"/>.</param>
         /// <returns>The same <paramref name="services"/> instance for chaining.</returns>
-        public static IServiceCollection EasyCoreRabbitMQ(this IServiceCollection services, Action<RabbitMQOptions> configure)
+        public static IServiceCollection AddEasyCoreRabbitMQ(this IServiceCollection services, Action<RabbitMQOptions> configure)
         {
             ArgumentNullException.ThrowIfNull(configure);
             services.Configure(configure);

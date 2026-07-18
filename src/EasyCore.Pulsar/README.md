@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Pulsar](https://img.shields.io/badge/Pulsar.Client-3.12-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -104,7 +104,7 @@ dotnet add package EasyCore.Pulsar
 ```csharp
 using EasyCore.Pulsar;
 
-builder.Services.EasyCorePulsar(o =>
+builder.Services.AddEasyCorePulsar(o =>
 {
     o.ServiceUrl = "pulsar://localhost:6650";
     o.TopicPrefix = "persistent://public/default/";
@@ -179,7 +179,7 @@ public sealed class InvoiceConsumer : BackgroundService
 
 | 成员 | 说明 |
 |---|---|
-| `EasyCorePulsar(Action<PulsarOptions>)` | DI 扩展：注册 Options 与 `IPulsarClient` |
+| `AddEasyCorePulsar(Action<PulsarOptions>)` | DI 扩展：注册 Options 与 `IPulsarClient` |
 | `ConnectAsync` | 连接 ServiceUrl 并构建底层客户端 |
 | `PublishAsync(topic, body, properties?)` | 发布消息；相对 Topic 会加 `TopicPrefix` |
 | `SubscribeAsync(topics, handler)` | 订阅并启动后台消费循环 |
@@ -226,7 +226,7 @@ A: 设置 `UseTls = true`，并按环境配置证书、`TlsHostnameVerificationE
 
 ## 9. 📄 License
 
-MIT OR Apache-2.0 — 详见仓库根目录 [LICENSE](../../LICENSE)（若存在）或 NuGet 包元数据。
+MIT — 详见仓库根目录 [LICENSE](../../LICENSE) 或 NuGet 包元数据。
 
 ---
 

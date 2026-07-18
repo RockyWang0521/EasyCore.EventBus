@@ -13,7 +13,7 @@ namespace EasyCore.EventBus.Pulsar
 
         public void AddServices(IServiceCollection services)
         {
-            services.EasyCorePulsar(_configure);
+            services.AddEasyCorePulsar(_configure);
             services.TryAddSingleton<IEventMessageQueueClient, EventPulsarClient>();
         }
     }

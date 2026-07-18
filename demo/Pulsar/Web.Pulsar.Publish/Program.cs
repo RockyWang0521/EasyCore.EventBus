@@ -17,7 +17,7 @@ public class Program
         });
 
         var pulsar = builder.Configuration.GetSection("Pulsar");
-        builder.Services.EasyCoreEventBus(options =>
+        builder.Services.AddEasyCoreEventBus(options =>
         {
             options.RetryCount = builder.Configuration.GetValue("EventBus:RetryCount", 3);
             options.RetryInterval = builder.Configuration.GetValue("EventBus:RetryInterval", 3);

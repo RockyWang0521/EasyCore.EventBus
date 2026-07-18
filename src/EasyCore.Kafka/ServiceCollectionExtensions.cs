@@ -8,7 +8,7 @@ namespace EasyCore.Kafka
     /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection EasyCoreKafka(this IServiceCollection services, Action<KafkaOptions> configure)
+        public static IServiceCollection AddEasyCoreKafka(this IServiceCollection services, Action<KafkaOptions> configure)
         {
             ArgumentNullException.ThrowIfNull(configure);
             services.Configure(configure);

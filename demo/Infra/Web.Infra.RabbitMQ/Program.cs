@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var rabbit = builder.Configuration.GetSection("RabbitMQ");
-builder.Services.EasyCoreRabbitMQ(o =>
+builder.Services.AddEasyCoreRabbitMQ(o =>
 {
     o.HostName = rabbit["HostName"] ?? "localhost";
     o.UserName = rabbit["UserName"] ?? "guest";

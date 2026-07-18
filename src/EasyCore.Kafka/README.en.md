@@ -6,7 +6,7 @@
 ![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)
 ![Kafka](https://img.shields.io/badge/Confluent.Kafka-2.12-orange)
 ![License](https://img.shields.io/badge/License-MIT%20%7C%20Apache--2.0-yellow)
-![Version](https://img.shields.io/badge/Version-8.0.1-blue)
+![Version](https://img.shields.io/badge/Version-8.3.0-blue)
 
 ---
 
@@ -103,7 +103,7 @@ dotnet add package EasyCore.Kafka
 ```csharp
 using EasyCore.Kafka;
 
-builder.Services.EasyCoreKafka(o =>
+builder.Services.AddEasyCoreKafka(o =>
 {
     o.BootstrapServers = "localhost:9092";
     o.TopicName = "EasyCore.Topic";
@@ -180,7 +180,7 @@ public sealed class TelemetryConsumer : BackgroundService
 
 | Member | Description |
 |---|---|
-| `EasyCoreKafka(Action<KafkaOptions>)` | DI: Options and `IKafkaClient` |
+| `AddEasyCoreKafka(Action<KafkaOptions>)` | DI: Options and `IKafkaClient` |
 | `ConnectAsync` | Initialize the consumer (idempotent) |
 | `PublishAsync(topic, body, key?, headers?)` | Produce to a topic |
 | `SubscribeAsync(topics, handler)` | Subscribe and start a background consume loop |
@@ -222,7 +222,7 @@ A: Yes — set `BootstrapServers` to e.g. `kafka1:9092,kafka2:9092`.
 
 ## 9. 📄 License
 
-MIT OR Apache-2.0 — see the repository [LICENSE](../../LICENSE) if present, or the NuGet package metadata.
+MIT — see the repository [LICENSE](../../LICENSE), or the NuGet package metadata.
 
 ---
 

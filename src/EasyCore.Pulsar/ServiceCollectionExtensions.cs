@@ -8,7 +8,7 @@ namespace EasyCore.Pulsar
     /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection EasyCorePulsar(this IServiceCollection services, Action<PulsarOptions> configure)
+        public static IServiceCollection AddEasyCorePulsar(this IServiceCollection services, Action<PulsarOptions> configure)
         {
             ArgumentNullException.ThrowIfNull(configure);
             services.Configure(configure);

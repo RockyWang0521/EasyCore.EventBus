@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var pulsar = builder.Configuration.GetSection("Pulsar");
-builder.Services.EasyCorePulsar(o =>
+builder.Services.AddEasyCorePulsar(o =>
 {
     o.ServiceUrl = pulsar["ServiceUrl"] ?? "pulsar://localhost:6650";
     o.TopicPrefix = pulsar["TopicPrefix"] ?? "persistent://public/default/";

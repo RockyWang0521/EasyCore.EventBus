@@ -1,0 +1,6 @@
+@Web.Infra.RabbitMQ_HostAddress = http://localhost:5138
+
+GET {{Web.Infra.RabbitMQ_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

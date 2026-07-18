@@ -8,7 +8,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>WZHY</Authors>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
-    <PackageReadmeFile>README.en.md</PackageReadmeFile>
     <RepositoryType>gitee</RepositoryType>
     <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
     <Description>.NET Core Pulsar client wrapper with publish/subscribe helpers.</Description>
@@ -25,10 +24,6 @@
     <None Include="..\..\png\EasyCoreLogo.png" Link="EasyCoreLogo.png">
       <PackagePath>\</PackagePath>
       <Pack>True</Pack>
-    </None>
-    <None Include="README.en.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

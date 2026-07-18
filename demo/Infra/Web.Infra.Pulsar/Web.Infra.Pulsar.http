@@ -1,0 +1,6 @@
+@Web.Infra.Pulsar_HostAddress = http://localhost:5215
+
+GET {{Web.Infra.Pulsar_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,49 +1,69 @@
 ﻿using EasyCore.EventBus.Distributed;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Kafka.Publish.Controllers
+namespace Web.Kafka.Publish.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class PublishController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PublishController : ControllerBase
+    private readonly IDistributedEventBus _bus;
+    private readonly ILogger<PublishController> _logger;
+
+    public PublishController(IDistributedEventBus bus, ILogger<PublishController> logger)
     {
-        private readonly IDistributedEventBus _distributedEventBus;
-
-        public PublishController(IDistributedEventBus distributedEventBus)
-        {
-            _distributedEventBus = distributedEventBus;
-        }
-
-        [HttpPost]
-        public async Task Publish()
-        {
-            var em = new WebEventMessage()
-            {
-                Message = "Hello, world!"
-            };
-
-            await _distributedEventBus.PublishAsync(em);
-
-            var em2 = new WebEventMessage2()
-            {
-                Message = "Hello, world!"
-            };
-
-            await _distributedEventBus.PublishAsync(em2);
-
-            var em3 = new WebEventMessage3()
-            {
-                Message = "Hello, world!"
-            };
-
-            await _distributedEventBus.PublishAsync(em3);
-
-            var em4 = new WebEventMessage4()
-            {
-                Message = "Hello, world!"
-            };
-
-            await _distributedEventBus.PublishAsync(em4);
-        }
+        _bus = bus;
+        _logger = logger;
     }
+
+    [HttpPost]
+    public async Task<IActionResult> PublishAll([FromBody] PublishRequest? request, CancellationToken ct)
+    {
+        var text = request?.Message ?? $"Hello Kafka @ {DateTimeOffset.Now:O}";
+        var published = new List<string>();
+
+        await PublishAsync(new WebEventMessage { Message = text }, published);
+        await PublishAsync(new WebEventMessage2 { Message = text }, published);
+        await PublishAsync(new WebEventMessage3 { Message = text }, published);
+        await PublishAsync(new WebEventMessage4 { Message = text }, published);
+
+        _logger.LogInformation("Published {Count} events", published.Count);
+        return Ok(new { message = text, published });
+    }
+
+    [HttpPost("one")]
+    public async Task<IActionResult> PublishOne([FromBody] PublishRequest? request)
+    {
+        var text = request?.Message ?? $"single @ {DateTimeOffset.Now:O}";
+        await _bus.PublishAsync(new WebEventMessage { Message = text });
+        return Ok(new { type = nameof(WebEventMessage), message = text });
+    }
+
+    [HttpPost("batch")]
+    public async Task<IActionResult> PublishBatch([FromBody] BatchPublishRequest? request)
+    {
+        var count = Math.Clamp(request?.Count ?? 10, 1, 1000);
+        var text = request?.Message ?? "batch";
+        for (var i = 0; i < count; i++)
+            await _bus.PublishAsync(new WebEventMessage2 { Message = $"{text}#{i}" });
+
+        return Ok(new { count, message = text });
+    }
+
+    private async Task PublishAsync<T>(T evt, List<string> published) where T : class, EasyCore.EventBus.Event.IEvent
+    {
+        await _bus.PublishAsync(evt);
+        published.Add(typeof(T).Name);
+    }
+}
+
+public sealed class PublishRequest
+{
+    public string? Message { get; set; }
+}
+
+public sealed class BatchPublishRequest
+{
+    public string? Message { get; set; }
+    public int Count { get; set; } = 10;
 }

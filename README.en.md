@@ -88,7 +88,8 @@ EasyCore.EventBus/
 │   ├── EasyCore.Pulsar/
 │   └── EasyCore.RedisStreams/
 ├── demo/
-│   ├── RabbitMq/                          # Publish + Subscribe Web demos
+│   ├── Infra/                             # Standalone infra client demos (no EventBus)
+│   ├── RabbitMq/                          # EventBus Publish + Subscribe
 │   ├── Kafka/
 │   ├── Pulsar/
 │   ├── Redis/
@@ -439,13 +440,18 @@ options.RedisStreams(opt =>
 
 | Path | Description | Example command |
 |---|---|---|
-| [`demo/RabbitMq`](demo/RabbitMq) | `Web.RabbitMQ` subscribe + `Web.RabbitMQ.Publish` publish | `dotnet run --project demo/RabbitMq/Web.RabbitMQ` |
-| [`demo/Kafka`](demo/Kafka) | Kafka publish / subscribe pair | `dotnet run --project demo/Kafka/Web.Kafka` |
-| [`demo/Pulsar`](demo/Pulsar) | Pulsar publish / subscribe pair | `dotnet run --project demo/Pulsar/Web.Pulsar` |
-| [`demo/Redis`](demo/Redis) | Redis Streams publish / subscribe | `dotnet run --project demo/Redis/Web.Redis` |
+| [`demo/RabbitMq`](demo/RabbitMq) | EventBus: `Web.RabbitMQ` subscribe + `Web.RabbitMQ.Publish` | `dotnet run --project demo/RabbitMq/Web.RabbitMQ` |
+| [`demo/Kafka`](demo/Kafka) | EventBus: Kafka publish / subscribe pair | `dotnet run --project demo/Kafka/Web.Kafka` |
+| [`demo/Pulsar`](demo/Pulsar) | EventBus: Pulsar publish / subscribe pair | `dotnet run --project demo/Pulsar/Web.Pulsar` |
+| [`demo/Redis`](demo/Redis) | EventBus: Redis Streams publish / subscribe | `dotnet run --project demo/Redis/Web.Redis` |
 | [`demo/Winform`](demo/Winform) | Local / distributed WinForms + Web | Open the matching `.csproj` |
+| [`demo/Infra`](demo/Infra) | **Infra-only**: `IRabbitMQClient` / `IKafkaClient` / `IPulsarClient` / `IRedisStreamsClient` | `dotnet run --project demo/Infra/Web.Infra.RabbitMQ` |
 
-Start with the RabbitMQ demos: run Subscribe and Publish, then POST to Publish’s `/api/Publish`.
+See [`demo/README.md`](demo/README.md) for the full guide.
+
+Tips:
+- **EventBus**: start Subscribe + Publish, then `POST /api/Publish` (also `/one`, `/batch`).
+- **Infra**: one process; Swagger → `POST /api/messages`; a HostedService subscribes and logs.
 
 ---
 

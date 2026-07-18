@@ -1,36 +1,52 @@
 using EasyCore.EventBus;
 using EasyCore.EventBus.Pulsar;
 
-namespace Web.Pulsar
+namespace Web.Pulsar;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(c =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            c.SwaggerDoc("v1", new() { Title = "EventBus Pulsar Subscriber", Version = "v1" });
+        });
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        var pulsar = builder.Configuration.GetSection("Pulsar");
+        builder.Services.EasyCoreEventBus(options =>
+        {
+            options.RetryCount = builder.Configuration.GetValue("EventBus:RetryCount", 3);
+            options.RetryInterval = builder.Configuration.GetValue("EventBus:RetryInterval", 3);
+            options.FailureCallback = (eventName, payload) =>
+                Console.WriteLine($"[FailureCallback] event={eventName} payload={payload}");
 
-            builder.Services.EasyCoreEventBus(options =>
+            options.Pulsar(o =>
             {
-                options.Pulsar("pulsar://localhost:6650");
+                o.ServiceUrl = pulsar["ServiceUrl"] ?? "pulsar://localhost:6650";
+                o.TopicPrefix = pulsar["TopicPrefix"] ?? "persistent://public/default/";
             });
+        });
 
-            var app = builder.Build();
+        var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseAuthorization();
-
-            app.MapControllers();
-
-            app.Run();
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
+
+        app.MapGet("/", () => Results.Ok(new
+        {
+            role = "EventBus.Subscriber",
+            transport = "Pulsar",
+            tip = "Start Web.Pulsar.Publish and POST /api/Publish"
+        }));
+
+        app.MapControllers();
+        app.Run();
     }
 }

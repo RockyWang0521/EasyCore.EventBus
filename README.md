@@ -88,7 +88,8 @@ EasyCore.EventBus/
 │   ├── EasyCore.Pulsar/
 │   └── EasyCore.RedisStreams/
 ├── demo/
-│   ├── RabbitMq/                          # Publish + Subscribe Web
+│   ├── Infra/                             # 基础设施独立客户端 Demo（无 EventBus）
+│   ├── RabbitMq/                          # EventBus Publish + Subscribe
 │   ├── Kafka/
 │   ├── Pulsar/
 │   ├── Redis/
@@ -440,13 +441,18 @@ options.RedisStreams(opt =>
 
 | 目录 | 说明 | 命令示例 |
 |---|---|---|
-| [`demo/RabbitMq`](demo/RabbitMq) | `Web.RabbitMQ` 订阅 + `Web.RabbitMQ.Publish` 发布 | `dotnet run --project demo/RabbitMq/Web.RabbitMQ` |
-| [`demo/Kafka`](demo/Kafka) | Kafka 发布 / 订阅成对 Demo | `dotnet run --project demo/Kafka/Web.Kafka` |
-| [`demo/Pulsar`](demo/Pulsar) | Pulsar 发布 / 订阅成对 Demo | `dotnet run --project demo/Pulsar/Web.Pulsar` |
-| [`demo/Redis`](demo/Redis) | Redis Streams 发布 / 订阅 | `dotnet run --project demo/Redis/Web.Redis` |
+| [`demo/RabbitMq`](demo/RabbitMq) | EventBus：`Web.RabbitMQ` 订阅 + `Web.RabbitMQ.Publish` 发布 | `dotnet run --project demo/RabbitMq/Web.RabbitMQ` |
+| [`demo/Kafka`](demo/Kafka) | EventBus：Kafka 发布 / 订阅成对 | `dotnet run --project demo/Kafka/Web.Kafka` |
+| [`demo/Pulsar`](demo/Pulsar) | EventBus：Pulsar 发布 / 订阅成对 | `dotnet run --project demo/Pulsar/Web.Pulsar` |
+| [`demo/Redis`](demo/Redis) | EventBus：Redis Streams 发布 / 订阅 | `dotnet run --project demo/Redis/Web.Redis` |
 | [`demo/Winform`](demo/Winform) | 本地 / 分布式 WinForms + Web | 打开对应 `.csproj` 运行 |
+| [`demo/Infra`](demo/Infra) | **仅基础设施包**：`IRabbitMQClient` / `IKafkaClient` / `IPulsarClient` / `IRedisStreamsClient` | `dotnet run --project demo/Infra/Web.Infra.RabbitMQ` |
 
-建议先跑 RabbitMQ Demo：分别启动 Subscribe 与 Publish 项目，对 Publish 的 `/api/Publish` 发 POST 即可验证。
+完整说明见 [`demo/README.md`](demo/README.md)。
+
+建议：
+- **EventBus**：分别启动 Subscribe 与 Publish，对 Publish 的 `POST /api/Publish`（或 `/one`、`/batch`）发请求。
+- **Infra**：单进程即可，Swagger → `POST /api/messages`；后台 HostedService 自动订阅并打日志。
 
 ---
 

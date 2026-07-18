@@ -3,7 +3,7 @@
 > **EasyCore.EventBus** 是面向 .NET 8 的轻量级事件总线库。统一本地（进程内）与分布式（跨进程）发布-订阅模型，通过可插拔适配器对接 RabbitMQ / Kafka / Pulsar / Redis Streams，帮助你快速落地事件驱动架构（EDA）。
 
 <p align="center">
-  <img src="png/EasyCoreLogo.png" alt="EasyCore Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/png/EasyCoreLogo.png" alt="EasyCore Logo" width="120" />
 </p>
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
@@ -12,7 +12,7 @@
 ![License](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-yellow)
 ![Version](https://img.shields.io/badge/Version-8.0.1-blue)
 
-仓库：[gitee.com/wzhy-0521/easy-core.-event-bus](https://gitee.com/wzhy-0521/easy-core.-event-bus)
+仓库：[github.com/RockyWang0521/EasyCore.EventBus](https://github.com/RockyWang0521/EasyCore.EventBus)
 
 ---
 
@@ -105,11 +105,11 @@ EasyCore.EventBus/
 
 ### 2.1 组件关系图
 
-![architecture-cn](docs/svg/architecture-cn.svg)
+![architecture-cn](https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/docs/svg/architecture-cn.svg)
 
 ### 2.2 消息生命周期
 
-![sequence-cn](docs/svg/sequence-cn.svg)
+![sequence-cn](https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/docs/svg/sequence-cn.svg)
 
 ### 2.3 数据流（文字版）
 

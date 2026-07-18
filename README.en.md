@@ -3,7 +3,7 @@
 > **EasyCore.EventBus** is a lightweight event bus for .NET 8. It unifies local (in-process) and distributed (cross-process) publish/subscribe, with pluggable adapters for RabbitMQ / Kafka / Pulsar / Redis Streams—so you can adopt event-driven architecture (EDA) with one consistent API.
 
 <p align="center">
-  <img src="png/EasyCoreLogo.png" alt="EasyCore Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/png/EasyCoreLogo.png" alt="EasyCore Logo" width="120" />
 </p>
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
@@ -12,7 +12,7 @@
 ![License](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-yellow)
 ![Version](https://img.shields.io/badge/Version-8.0.1-blue)
 
-Repository: [gitee.com/wzhy-0521/easy-core.-event-bus](https://gitee.com/wzhy-0521/easy-core.-event-bus)
+Repository: [github.com/RockyWang0521/EasyCore.EventBus](https://github.com/RockyWang0521/EasyCore.EventBus)
 
 ---
 
@@ -105,11 +105,11 @@ EasyCore.EventBus/
 
 ### 2.1 Component Diagram
 
-![architecture-en](docs/svg/architecture-en.svg)
+![architecture-en](https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/docs/svg/architecture-en.svg)
 
 ### 2.2 Message Lifecycle
 
-![sequence-en](docs/svg/sequence-en.svg)
+![sequence-en](https://raw.githubusercontent.com/RockyWang0521/EasyCore.EventBus/master/docs/svg/sequence-en.svg)
 
 ### 2.3 Data Flow
 

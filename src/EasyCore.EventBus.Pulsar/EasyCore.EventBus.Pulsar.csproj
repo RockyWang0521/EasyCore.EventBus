@@ -9,15 +9,15 @@
     <Authors>WZHY</Authors>
     <PackageIcon>EasyCoreLogo.png</PackageIcon>
     <PackageReadmeFile>README.en.md</PackageReadmeFile>
-    <RepositoryType>gitee</RepositoryType>
-    <RepositoryUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/RockyWang0521/EasyCore.EventBus</RepositoryUrl>
     <Description>.NET Core EventBus distributed transport based on Pulsar.</Description>
-    <PackageProjectUrl>https://gitee.com/wzhy-0521/easy-core.-event-bus.git</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/RockyWang0521/EasyCore.EventBus</PackageProjectUrl>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
     <PackageTags>easycore;eventbus;pulsar</PackageTags>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
-    <Version>8.0.1</Version>
+    <Version>8.0.2</Version>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 

@@ -4,49 +4,46 @@
       <stop offset="0%" stop-color="#0f1419"/>
       <stop offset="100%" stop-color="#1a2332"/>
     </linearGradient>
-    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/>
-    </filter>
   </defs>
   <rect width="980" height="460" rx="16" fill="url(#bg)"/>
-  <text x="40" y="42" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="20" font-weight="700">EasyCore.EventBus Architecture</text>
-  <text x="40" y="66" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Host App ’ EventBus Core ’ Transport Adapters ’ Infra Packages ’ Message Brokers</text>
+  <text x="40" y="42" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">EasyCore.EventBus Architecture</text>
+  <text x="40" y="66" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="13">Host App -&gt; EventBus Core -&gt; Transport Adapters -&gt; Infra Packages -&gt; Message Brokers</text>
 
-  <rect x="40" y="100" width="150" height="80" rx="12" fill="#243044" stroke="#3d9cf0" stroke-width="2" filter="url(#shadow)"/>
-  <text x="115" y="135" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="14" font-weight="700">Host App</text>
-  <text x="115" y="158" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">Web / WinForms</text>
+  <rect x="40" y="100" width="150" height="80" rx="12" fill="#243044" stroke="#3d9cf0" stroke-width="2"/>
+  <text x="115" y="135" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Host App</text>
+  <text x="115" y="158" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">Web / WinForms</text>
 
-  <rect x="240" y="85" width="220" height="110" rx="12" fill="#243044" stroke="#3ecf8e" stroke-width="2" filter="url(#shadow)"/>
-  <text x="350" y="118" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="14" font-weight="700">EasyCore.EventBus</text>
-  <text x="350" y="140" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">Local / Distributed</text>
-  <text x="350" y="160" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">Dispatcher / HostedService</text>
-  <text x="350" y="180" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">Handler scan / Retry</text>
+  <rect x="240" y="85" width="220" height="110" rx="12" fill="#243044" stroke="#3ecf8e" stroke-width="2"/>
+  <text x="350" y="118" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">EasyCore.EventBus</text>
+  <text x="350" y="140" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">Local / Distributed</text>
+  <text x="350" y="160" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">Dispatcher / HostedService</text>
+  <text x="350" y="180" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">Handler scan / Retry</text>
 
-  <rect x="520" y="70" width="200" height="140" rx="12" fill="#243044" stroke="#f0b429" stroke-width="2" filter="url(#shadow)"/>
-  <text x="620" y="100" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="14" font-weight="700">EventBus.* Adapters</text>
-  <text x="620" y="125" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">.RabbitMQ / .Kafka</text>
-  <text x="620" y="145" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">.Pulsar / .RedisStreams</text>
-  <text x="620" y="170" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">IEvent serialization</text>
-  <text x="620" y="190" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">Headers / Routing</text>
+  <rect x="520" y="70" width="200" height="140" rx="12" fill="#243044" stroke="#f0b429" stroke-width="2"/>
+  <text x="620" y="100" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">EventBus.* Adapters</text>
+  <text x="620" y="125" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">.RabbitMQ / .Kafka</text>
+  <text x="620" y="145" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">.Pulsar / .RedisStreams</text>
+  <text x="620" y="170" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">IEvent serialization</text>
+  <text x="620" y="190" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">Headers / Routing</text>
 
-  <rect x="780" y="70" width="160" height="140" rx="12" fill="#243044" stroke="#c084fc" stroke-width="2" filter="url(#shadow)"/>
-  <text x="860" y="105" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="14" font-weight="700">Infra</text>
-  <text x="860" y="130" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">EasyCore.RabbitMQ</text>
-  <text x="860" y="150" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">EasyCore.Kafka</text>
-  <text x="860" y="170" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">EasyCore.Pulsar</text>
-  <text x="860" y="190" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="12">EasyCore.RedisStreams</text>
+  <rect x="780" y="70" width="160" height="140" rx="12" fill="#243044" stroke="#c084fc" stroke-width="2"/>
+  <text x="860" y="105" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700">Infra</text>
+  <text x="860" y="130" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">EasyCore.RabbitMQ</text>
+  <text x="860" y="150" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">EasyCore.Kafka</text>
+  <text x="860" y="170" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">EasyCore.Pulsar</text>
+  <text x="860" y="190" text-anchor="middle" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="12">EasyCore.RedisStreams</text>
 
-  <text x="40" y="250" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Message brokers (pick one)</text>
+  <text x="40" y="250" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="13">Message brokers (pick one)</text>
   <rect x="40" y="270" width="200" height="56" rx="10" fill="#1a2332" stroke="#f97316"/>
-  <text x="140" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13">= RabbitMQ</text>
+  <text x="140" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="13">RabbitMQ</text>
   <rect x="270" y="270" width="200" height="56" rx="10" fill="#1a2332" stroke="#22c55e"/>
-  <text x="370" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13">=è Kafka</text>
+  <text x="370" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Kafka</text>
   <rect x="500" y="270" width="200" height="56" rx="10" fill="#1a2332" stroke="#38bdf8"/>
-  <text x="600" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13">¡ Pulsar</text>
+  <text x="600" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Pulsar</text>
   <rect x="730" y="270" width="210" height="56" rx="10" fill="#1a2332" stroke="#ef4444"/>
-  <text x="835" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial" font-size="13">=4 Redis Streams</text>
+  <text x="835" y="304" text-anchor="middle" fill="#e8eef7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Redis Streams</text>
 
-  <text x="40" y="370" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">In-process: ILocalEventBus ’ ILocalEventHandler&lt;T&gt; (no broker)</text>
-  <text x="40" y="400" fill="#8fa3bc" font-family="Segoe UI, Arial" font-size="13">Distributed: IDistributedEventBus ’ IEventMessageQueueClient ’ Broker ’ Dispatcher</text>
-  <text x="40" y="430" fill="#6b7c93" font-family="Segoe UI, Arial" font-size="12">You can also reference EasyCore.RabbitMQ (etc.) alone for native messaging</text>
+  <text x="40" y="370" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="13">In-process: ILocalEventBus -&gt; ILocalEventHandler&lt;T&gt; (no broker)</text>
+  <text x="40" y="400" fill="#8fa3bc" font-family="Segoe UI, Arial, sans-serif" font-size="13">Distributed: IDistributedEventBus -&gt; IEventMessageQueueClient -&gt; Broker -&gt; Dispatcher</text>
+  <text x="40" y="430" fill="#6b7c93" font-family="Segoe UI, Arial, sans-serif" font-size="12">You can also reference EasyCore.RabbitMQ (etc.) alone for native messaging</text>
 </svg>
